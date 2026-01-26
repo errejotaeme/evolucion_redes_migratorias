@@ -189,8 +189,6 @@ df_coordenadas = (
 print('Operación finalizada.')
 
 
-
-
 # 3. **DATOS DE POBLACIÓN**
 
 # Descargamos los datos de poblaciones de la página oficial de Naciones Unidas
@@ -258,15 +256,22 @@ df_poblaciones = (
 print('Operación finalizada.')
 
 
-
-
 # 4. **DATOS MIGRATORIOS**
 
 # Descargamos los datos de migraciones de la página oficial de Naciones Unidas
 print('4. Procesando datos migratorios...')
 url_migraciones = 'https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2024_ims_stock_by_sex_destination_and_origin.xlsx'
-headers = {'User-Agent': 'Mozilla/5.0'}
-respuesta_migras = requests.get(url_migraciones, headers=headers)
+# headers = {'User-Agent': 'Mozilla/5.0'}
+headers = {
+    "User-Agent": (
+        "Mozilla/5.0 (X11; Linux x86_64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/121.0.0.0 Safari/537.36"
+    ),
+    "Accept": "*/*",
+}
+respuesta_migras = requests.get(url_migraciones, headers=headers, timeout=30)
+
 doc_excel_migras = BytesIO(respuesta_migras.content)
 df_migras_original = pd.read_excel(doc_excel_migras, sheet_name='Table 1', engine='openpyxl')
 
