@@ -51,17 +51,20 @@ cod_m49,iso2_m49,iso3_m49,pais_ES,region_ES,subregion_ES,pais_EN,region_EN,subre
 218,EC,ECU,Ecuador,Américas,América Latina y el Caribe,Ecuador,Americas,Latin America and the Caribbean,False,False
 233,EE,EST,Estonia,Europa,Europa septentrional,Estonia,Europe,Northern Europe,False,False
 818,EG,EGY,Egipto,África,África septentrional,Egypt,Africa,Northern Africa,False,False
+732,EH,ESH,Sáhara Occidental,África,África septentrional,Western Sahara,Africa,Northern Africa,False,False
 232,ER,ERI,Eritrea,África,África Subsahariana,Eritrea,Africa,Sub-Saharan Africa,True,False
 724,ES,ESP,España,Europa,Europa meridional,Spain,Europe,Southern Europe,False,False
 231,ET,ETH,Etiopía,África,África Subsahariana,Ethiopia,Africa,Sub-Saharan Africa,True,True
 246,FI,FIN,Finlandia,Europa,Europa septentrional,Finland,Europe,Northern Europe,False,False
 242,FJ,FJI,Fiji,Oceanía,Melanesia,Fiji,Oceania,Melanesia,False,False
+238,FK,FLK,Islas Malvinas (Falkland),Américas,América Latina y el Caribe,Falkland Islands (Malvinas),Americas,Latin America and the Caribbean,False,False
 583,FM,FSM,Micronesia (Estados Federados de),Oceanía,Micronesia,Micronesia (Federated States of),Oceania,Micronesia,False,False
 250,FR,FRA,Francia,Europa,Europa occidental,France,Europe,Western Europe,False,False
 266,GA,GAB,Gabón,África,África Subsahariana,Gabon,Africa,Sub-Saharan Africa,False,False
 826,GB,GBR,Reino Unido de Gran Bretaña e Irlanda del Norte,Europa,Europa septentrional,United Kingdom of Great Britain and Northern Ireland,Europe,Northern Europe,False,False
 308,GD,GRD,Granada,Américas,América Latina y el Caribe,Grenada,Americas,Latin America and the Caribbean,False,False
 268,GE,GEO,Georgia,Asia,Asia occidental,Georgia,Asia,Western Asia,False,False
+254,GF,GUF,Guayana Francesa,Américas,América Latina y el Caribe,French Guiana,Americas,Latin America and the Caribbean,False,False
 288,GH,GHA,Ghana,África,África Subsahariana,Ghana,Africa,Sub-Saharan Africa,False,False
 270,GM,GMB,Gambia,África,África Subsahariana,Gambia,Africa,Sub-Saharan Africa,True,False
 324,GN,GIN,Guinea,África,África Subsahariana,Guinea,Africa,Sub-Saharan Africa,True,False
@@ -142,6 +145,7 @@ cod_m49,iso2_m49,iso3_m49,pais_ES,region_ES,subregion_ES,pais_EN,region_EN,subre
 608,PH,PHL,Filipinas,Asia,Asia sudoriental,Philippines,Asia,South-eastern Asia,False,False
 586,PK,PAK,Pakistán,Asia,Asia meridional,Pakistan,Asia,Southern Asia,False,False
 616,PL,POL,Polonia,Europa,Europa oriental,Poland,Europe,Eastern Europe,False,False
+630,PR,PRI,Puerto Rico,Américas,América Latina y el Caribe,Puerto Rico,Americas,Latin America and the Caribbean,False,False
 275,PS,PSE,Estado de Palestina,Asia,Asia occidental,State of Palestine,Asia,Western Asia,False,False
 620,PT,PRT,Portugal,Europa,Europa meridional,Portugal,Europe,Southern Europe,False,False
 585,PW,PLW,Palau,Oceanía,Micronesia,Palau,Oceania,Micronesia,False,False
@@ -180,6 +184,7 @@ cod_m49,iso2_m49,iso3_m49,pais_ES,region_ES,subregion_ES,pais_EN,region_EN,subre
 792,TR,TUR,Türkiye,Asia,Asia occidental,Türkiye,Asia,Western Asia,False,False
 780,TT,TTO,Trinidad y Tabago,Américas,América Latina y el Caribe,Trinidad and Tobago,Americas,Latin America and the Caribbean,False,False
 798,TV,TUV,Tuvalu,Oceanía,Polinesia,Tuvalu,Oceania,Polynesia,True,False
+158,TW,TWN,Taiwán,Asia,Asia oriental,Taiwan,Asia,Eastern Asia,False,False
 834,TZ,TZA,República Unida de Tanzanía,África,África Subsahariana,United Republic of Tanzania,Africa,Sub-Saharan Africa,True,False
 804,UA,UKR,Ucrania,Europa,Europa oriental,Ukraine,Europe,Eastern Europe,False,False
 800,UG,UGA,Uganda,África,África Subsahariana,Uganda,Africa,Sub-Saharan Africa,True,True
@@ -195,3 +200,4 @@ cod_m49,iso2_m49,iso3_m49,pais_ES,region_ES,subregion_ES,pais_EN,region_EN,subre
 710,ZA,ZAF,Sudáfrica,África,África Subsahariana,South Africa,Africa,Sub-Saharan Africa,False,False
 894,ZM,ZMB,Zambia,África,África Subsahariana,Zambia,Africa,Sub-Saharan Africa,True,True
 716,ZW,ZWE,Zimbabwe,África,África Subsahariana,Zimbabwe,Africa,Sub-Saharan Africa,False,True
+2003,ZZ,ZZZ,Otros,Región desconocida,Subregión desconocida,Others,Unknown region,Unknown subregion,False,False
