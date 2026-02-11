@@ -10,7 +10,6 @@ from io import BytesIO, StringIO
 # # **Construcción del conjunto de datos**
 
 # 1. **REGIONES, SUBREGIONES, PAÍSES MENOS DESARROLLADOS Y SIN LITORAL**
-
 # Obtenemos los códigos estándar de países o áreas para uso estadístico (M49 ONU)
 # y nos quedamos con las columnas de interés
 print('1. Procesando regiones, subregiones y códigos de países...')
@@ -85,10 +84,7 @@ df_m49 = df_m49[columnas_ordenadas]
 print('Operación finalizada.')
 
 
-
-
 # 2. **LONGITUDES Y LATITUDES**
-
 # Obtenemos los centroides de países desde UNHCR (Alto Comisionado de las Naciones Unidas para los Refugiados)
 print('2. Procesando ubicaciones...')
 url_coordenadas = 'https://gis.unhcr.org/arcgis/rest/services/core_v2/wrl_polbnd_int_1m_p_unhcr/FeatureServer/0/query'
@@ -127,6 +123,9 @@ gdf['lat'] = gdf['centroide'].y
 df_coordenadas = gdf.drop(columns=['geometry','centroide','secondary_territory'])
 df_coordenadas.columns = ['iso3_coord','estatus_geo','lon','lat']
 
+territorios_a_conservar = ['GUF', 'PRI', 'FLK', 'ESH', 'TWN']
+df_aux = df_coordenadas[df_coordenadas.iso3_coord.isin(territorios_a_conservar)]
+
 # Territorios de ultramar, autónomos, no soberanos, etc.
 territorios = {
     'The City of Vatican',
@@ -151,23 +150,47 @@ territorios = {
     ' ',   
 }
 df_coordenadas = df_coordenadas[~df_coordenadas.estatus_geo.isin(territorios)]
+df_coordenadas = pd.concat([df_coordenadas, df_aux]).reset_index(drop=True)
+# Asignamos un punto en el océano Atlántico Sur solo para poder identificarlo en la exploración
+df_coordenadas.loc[201] = ['ZZZ', 'Desconocido', -20.000000, -25.000000]
 
-# Los siguientes conjuntos definen la lista de 196 países
-# Conjunto de 196 códigos ISO 3166 alfa-3
+# Conjunto de códigos ISO 3166 alfa-3
 codigos_iso3 = set(df_coordenadas.iso3_coord.unique())
 
-# Conjunto de 196 Codigos globales m49
+# Conjunto inicial de códigos globales m49
 codigos_m49 = set(
     df_m49[df_m49.iso3_m49.isin(codigos_iso3)].cod_m49.unique()
 )
-
 # Nos quedamos con los países que estan en el conjunto 
+df_m49 = df_m49[df_m49.cod_m49.isin(codigos_m49)]
+# Agregamos TWN y Otros
+df_aux = pd.DataFrame(
+    {
+        'cod_m49': [158, 2003],
+        'iso2_m49': ['TW', 'ZZ'],
+        'iso3_m49': ['TWN', 'ZZZ'],
+        'pais_ES': ['Taiwán', 'Otros'], 
+        'region_ES': ['Asia', 'Región desconocida'],
+        'subregion_ES': ['Asia oriental', 'Subregión desconocida'],
+        'pais_EN': ['Taiwan', 'Others'],
+        'region_EN': ['Asia', 'Unknown region'],
+        'subregion_EN': ['Eastern Asia', 'Unknown subregion'],
+        # A Otros le asignamos False por practicidad, aunque no tiene significado
+        'menos_desarrollado': [False, False],  
+        'sin_litoral': [False, False]
+    }
+)
 df_m49 = (
-    df_m49[df_m49.cod_m49.isin(codigos_m49)]
+    pd.concat([df_m49, df_aux])
     .sort_values('iso2_m49', ascending=True)
     .reset_index(drop=True)
 )
+# Agregamos al conjunto inicial los codigos de TW y ZZ
+# Los agregamos después de sumarlos a la tabla para que no haya repetidos
+codigos_m49.add(np.int64(158))
+codigos_m49.add(np.int64(2003))
 # df_m49.to_csv('m49.csv', index=False)
+
 
 # df auxiliar para agregrar códigos en las tablas
 df_alfa3_codigos = df_m49[['cod_m49', 'iso3_m49']]
@@ -185,12 +208,10 @@ df_coordenadas = (
     .reset_index(drop=True)
 )
 # df_coordenadas.to_csv('coordenadas.csv', index=False)
-
 print('Operación finalizada.')
 
 
 # 3. **DATOS DE POBLACIÓN**
-
 # Descargamos los datos de poblaciones de la página oficial de Naciones Unidas
 print('3. Procesando datos de población...')
 url_poblaciones = 'https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/EXCEL_FILES/1_General/WPP2024_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT.xlsx'
@@ -247,6 +268,7 @@ df_poblaciones = (
         right_on='iso3_pobla',
         how='left',
     ).drop(columns=['iso3_m49'])
+    .dropna(axis=0, how='any')
     .rename(columns={'cod_m49':'cod_pobla'})
     .sort_values(['iso3_pobla','año_pobla'], ascending=[True, True])
     .reset_index(drop=True)
@@ -257,7 +279,6 @@ print('Operación finalizada.')
 
 
 # 4. **DATOS MIGRATORIOS**
-
 # Descargamos los datos de migraciones de la página oficial de Naciones Unidas
 print('4. Procesando datos migratorios...')
 url_migraciones = 'https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2024_ims_stock_by_sex_destination_and_origin.xlsx'
@@ -379,16 +400,13 @@ df_migraciones = (
     .reset_index(drop=True)
 )
 
-# # Exportamos las tablas
+# Exportamos las tablas
 # df_migraciones.to_csv('migraciones.csv', index=False)
 # df_migras_original.to_csv('migraciones_original.csv', index=False)
 print('Operación finalizada.')
 
 
-
-
 # 5. **UNIFICACIÓN DE LOS DATOS**
-
 # Juntamos los datos obtenidos de las distintas fuentes
 print('5. Integrando los datos...')
 
@@ -526,7 +544,7 @@ df_migras_90_24 = (
     .sort_values(['iso2_orig', 'año'], ascending=[True, True])
     .reset_index(drop=True)
 )
-
+df_migras_90_24 = df_migras_90_24.fillna(0)
 # df_migras_90_24.to_csv('migras_90_24.csv', index=False)
 
 print('Operación finalizada.')
@@ -534,7 +552,7 @@ tex_m49 = '\n• df_m49: códigos y clasificaciones de países, e indicadores es
 tex_pobla = '\n• df_poblaciones: población por país en los años con datos migratorios.'
 tex_coord = '\n• df_coordenadas: centroides geográficos de cada país.'
 tex_migras_orig = '\n• df_migras_original: datos migratorios en bruto.'
-tex_migras = '\n• df_migraciones: datos migratorios de 196 países.'
+tex_migras = '\n• df_migraciones: datos migratorios de 202 países.'
 tex_migras_90_24 = '\n• df_migras_90_24: reúne los datos anteriores.'
 dfs_disponibles = (
     tex_m49 + tex_pobla + tex_coord + tex_migras_orig + tex_migras + tex_migras_90_24
