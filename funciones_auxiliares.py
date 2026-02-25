@@ -210,33 +210,28 @@ def graficar_concentracion_emigracion(
     return fig, eje
 
 
+
+
+
 def graficar_comunidades_ppales(
-    grafo_pobla_ext: nx.DiGraph ,
-    titulo: str,
-    nota_al_pie: str,
-    caracteres_por_linea: int = 200,
+    grafo_pobla_ext: nx.DiGraph,
+    eje: Axes,
+    año: str,
     **args,
-) -> Figure:
+) -> None:
     
     # Colores del mapa
     agua = args.get('agua','#fafafa')
-    tierra = args.get('tierra', '#bdb1a7')
-    fronteras = args.get('fronteras', '#f5e5d8')
+    tierra = args.get('tierra', '#b1b1b1')
+    fronteras = args.get('fronteras', '#f3f3f3')
     continentes = args.get('continentes', '#90877f')   
     # Colores del grafo
-    color_titulo = args.get('color_titulo', '#252a29')
-    color_nodos = args.get('color_nodos', '#ba0000')
+    color_nodos = args.get('color_nodos', '#b1b1b1')
     color_etq_pais = args.get('color_etq_pais', '#003cff')
     
-    # Vsualización del grafo
-    fig = plt.figure(figsize=(30,12))
-    plt.subplots_adjust(left=0.01, right=0.98, top=0.98, bottom=0.01)
-    
-    # Configuración de colores
-    fig.set_facecolor(agua) 
-    eje = fig.add_subplot(1,1,1)
+    # Vsualización 
     eje.set_facecolor(agua) 
-    eje.axis('off')
+    # eje.axis('off')
 
     # Hacemos zoom en la región de interés
     posiciones_ingresadas = nx.get_node_attributes(grafo_pobla_ext, 'pos')
@@ -245,10 +240,7 @@ def graficar_comunidades_ppales(
     
     # Márgenes que permiten regular el zoom sobre el mapa
     margen_lat = 5
-    margen_lon = 4
-    
-    # Proyección
-    eje = plt.axes(projection=ccrs.PlateCarree())
+    margen_lon = 4    
     
     # Extensión del mapa
     eje.set_extent([
@@ -282,24 +274,22 @@ def graficar_comunidades_ppales(
     # # ETIQUETAS
     etiquetas = nx.get_node_attributes(grafo_pobla_ext, 'etiqueta')
     for nodo, (x, y) in pos_nodos.items():
-        tamaño = 6 if len(etiquetas[nodo]) > 2 else 9
-        interlineado = 0.75 if len(etiquetas[nodo]) > 2 else 1
         eje.text(
             x,
             y,
             etiquetas[nodo],
-            fontsize=tamaño,
+            fontsize=9.5,
             fontweight='bold',
             fontstyle='italic',
             color=color_etq_pais,
             ha='center',
             va='center',
-            linespacing=interlineado,
+            # linespacing=interlineado,
             alpha=.6
         )
         
     # Colores y texto de las referencias
-    tex_ref = 'Código Alfa-2 del origen de comunidad inmigrante.'
+    tex_ref = f'Origen de la principal comunidad de inmigrantes en {año}.'
     
     ref_pais = mpatches.Patch(color=color_etq_pais, label=tex_ref)
     
@@ -307,7 +297,7 @@ def graficar_comunidades_ppales(
         # title='REFERENCIAS',
         handles=[ref_pais],
         loc='lower left',
-        fontsize=11.5,
+        fontsize=12,
         frameon=False,
         facecolor='black',
         framealpha=0.2,
@@ -319,30 +309,3 @@ def graficar_comunidades_ppales(
     # Color del título
     ref1.get_title().set_color('white')
     eje.add_artist(ref1)
-
-    nota_al_pie = textwrap.fill(nota_al_pie, width=caracteres_por_linea)
-    fig.text(
-        0.21, 
-        0.05,
-        nota_al_pie, 
-        ha="left",
-        va="top",
-        fontsize=15,
-        color='black'
-    )    
-    
-    eje.set_title(
-        titulo, 
-        fontsize=19,
-        color=color_titulo,
-        # fontweight='bold',
-        pad=30
-    )
-    
-    plt.savefig("resultados/ppales_comunidades_de_migrantes.png", dpi=300) 
-    plt.close()
-    
-    return fig
-
-
-
