@@ -8,6 +8,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import textwrap
+from pathlib import Path
 
 from collections import Counter
 from matplotlib.axes import Axes
@@ -309,3 +310,22 @@ def graficar_comunidades_ppales(
     # Color del título
     ref1.get_title().set_color('white')
     eje.add_artist(ref1)
+
+
+
+
+def cargar_nombres_es(
+    path: str = 'fuentes-de-datos/nombres_es.csv', 
+    key: str = 'iso3'
+    ) -> dict:
+    """Carga el listado de nombres normalizado 
+    devuelve dict {key: name_es}.
+    key puede ser 'iso3' o 'cod_m49'.
+    """
+    p = Path(path)
+    m = pd.read_csv(p, dtype=str)
+    if key not in m.columns:
+        raise KeyError(f"La clave '{key}' no está en el listado")
+    m[key] = m[key].astype(str)
+    m['name_es'] = m.get('name_es', '').fillna('').astype(str)
+    return dict(zip(m[key], m['name_es']))
