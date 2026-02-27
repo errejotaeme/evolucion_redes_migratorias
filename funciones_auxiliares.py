@@ -1,5 +1,6 @@
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+import dipot
 import matplotlib.cm as cm
 import matplotlib.gridspec as gridspec
 import matplotlib.patches as mpatches
@@ -7,8 +8,10 @@ import matplotlib.pyplot as plt
 import networkx as nx 
 import numpy as np
 import pandas as pd
+import seaborn.objects as so
 import textwrap
 from pathlib import Path
+
 
 from collections import Counter
 from matplotlib.axes import Axes
@@ -329,3 +332,229 @@ def cargar_nombres_es(
     m[key] = m[key].astype(str)
     m['name_es'] = m.get('name_es', '').fillna('').astype(str)
     return dict(zip(m[key], m['name_es']))
+
+
+
+
+
+
+
+def graficar_distribucion_pobla_emig_inmig(
+    dicc_datos_por_año: dict[int, pd.DataFrame] 
+) -> Figure:
+    
+    # Definimos el dominio
+    lados = 10
+    angulos = np.linspace(0, 2*np.pi, lados, endpoint=False)
+    vertices_dominio = [(np.cos(theta), np.sin(theta)) for theta in angulos]
+    
+    dpi = 300
+    fig, ejes = plt.subplots(
+        4, 
+        3, 
+        figsize=(20, 21),
+        dpi=dpi,
+        gridspec_kw={'height_ratios': [0.1, 1, 1, 1]},
+    )
+    ejes = ejes.ravel()
+    
+    indices_magnitud = [i for i in range(len(ejes)) if i % 3 == 0 and i > 1]
+    indices_años = [1, 2]
+    indices_diag = [i for i in range(len(ejes)) if i % 3 != 0 and i > 3]
+    iter_indices = iter(indices_diag)
+    
+    años = [1990, 2024]
+    
+    lista_magnitudes_objetivo = [
+        ('poblacion', 'Marrón'), ('emigrantes', 'Verde'), ('inmigrantes', 'Roja')
+    ]
+    
+    i = 0
+    for magnitud_objetivo, paleta in lista_magnitudes_objetivo:
+        for año in años:  
+        
+            df = dicc_datos_por_año[año].copy()
+            
+            columnas_de_interes = [
+                'alfa2',
+                magnitud_objetivo,
+                f'pct_aporte_{magnitud_objetivo}',
+                'lon', 
+                'lat', 
+            ]
+            
+            # Recortamos a las columnas de interes y ordenamos
+            df = df[columnas_de_interes]
+            df = df.sort_values([columnas_de_interes[2]], ascending=False).reset_index(drop=True)
+            # Separamos los paises que explican 90%
+            df[f'pct_aporte_{magnitud_objetivo}_acum'] = df[f'pct_aporte_{magnitud_objetivo}'].cumsum()
+            df = df[df[f'pct_aporte_{magnitud_objetivo}_acum'] < 91]
+    
+            # Datos para la construcción del gráfico
+            nombres_de_celdas = df.alfa2.values
+        
+            # Datos para la construcción del diagrama
+            valores_magnitud_objetivo = df[magnitud_objetivo].values
+            x, y = df.lon.values, df.lat.values    
+        
+            # Normalizamos las coordenadas a [-1, 1]
+            x = (x + 180) / 180 - 1
+            y = (y + 90) / 90 - 1
+            coordenadas_de_sitios = np.column_stack((x, y))
+                   
+            pct_barra = 0.0
+            formato_barra: str = "{desc}: [{bar}] {percentage:3.0f}% | {elapsed}"
+            texto_barra: str = f'Construyendo diagrama: {magnitud_objetivo}-{año}'       
+    
+            diagrama = dipot.DiagramaDePotencia(
+                vertices_dominio,
+                coordenadas_de_sitios,
+                nombres_de_celdas,
+                valores_magnitud_objetivo,   
+            )
+            
+            with tqdm(total=100, desc=texto_barra, bar_format=formato_barra) as barra_pct:    
+                diagrama.construir_diagrama(        
+                    .13, # alfa_base
+                    500, # max_iteraciones
+                    5, # umbral_estancamiento
+                    1e-5, # error_rel_max_permitido,
+                    False, # imprimir progreso
+                    barra_pct
+                )
+        
+            
+            config_grafico = {
+                # Título
+                'margen_titulo': 7,
+                # Nombres de celdas
+                'alfa_nombres_de_celdas': .9, 
+                'factor_aumento': 4,
+                # Celdas
+                'tam_min_nombre_celda': 5,
+                'grosor_borde_celdas': .6,
+                'alfa_borde_celdas': .7,
+                'paleta_celdas': paleta,
+            }   
+    
+                    
+            diagrama._graficar_diagrama(    
+                6, # Ancho
+                6, # Alto
+                dpi, # DPI
+                '', # Título
+                '', # Nota al pie
+                150, # Núm. de caracteres por línea
+                None, # Ruta de salida
+                ejes[next(iter_indices)], # eje
+                **config_grafico,
+            )
+            
+            i += 1
+    
+    for (magnitud, _), indice in zip(lista_magnitudes_objetivo, indices_magnitud):
+        ejes[indice].text(
+            .5,
+            .5,
+            magnitud.upper(),
+            ha='center',
+            fontsize=30,
+            weight='bold',
+        )
+        ejes[indice].axis('off')
+    
+    ejes[0].set_visible(False)
+    
+    for año, indice in zip(años, indices_años):
+        ejes[indice].text(
+            .5,
+            .5,
+            str(año),
+            ha='center',
+            fontsize=30,
+            weight='bold',
+        )
+        ejes[indice].axis('off')
+    
+    ruta_salida = 'resultados/distribucion_poblacion_emigracion_inmigracion_1990-2024.png'
+    plt.tight_layout(pad=4)
+    plt.savefig(ruta_salida, bbox_inches='tight', dpi=dpi)
+    plt.close()
+
+    return fig
+
+
+
+
+    
+def graficar_migraciones_africa(
+    migras_hacia_africa: pd.DataFrame,
+    migras_desde_africa: pd.DataFrame,
+) -> Figure:   
+
+    fig1 = plt.figure(figsize=(9, 6), dpi=300)  
+
+    # Hacia
+    vis1 = (
+        so.Plot(migras_hacia_africa, 'año', 'migrantes', color='region_orig_ES')
+        .add(so.Dot(pointsize=4))
+        .add(so.Line(linewidth=1.5))
+        .scale(color='colorblind')
+            .layout(size=(9, 6))
+        .label(
+            title='Migraciones hacia África desde las distintas regiones',
+            x='Año',
+            y='Migrantes',
+            color='Región origen'
+        )
+    )    
+    vis1.on(fig1).plot()
+    fig1.tight_layout()
+    fig1.savefig('resultados/migras_hacia_Africa.png', bbox_inches='tight', dpi=300)
+
+    # Desde
+    fig2 = plt.figure(figsize=(9, 6), dpi=300)
+    vis2 = (
+        so.Plot(migras_desde_africa, 'año', 'migrantes', color='region_des_ES')
+        .add(so.Dot(pointsize=4))
+        .add(so.Line(linewidth=1.5))
+        .scale(color='colorblind')
+            .layout(size=(9, 6))
+        .label(
+            title='Migraciones desde África hacia las distintas regiones',
+            x='Año',
+            y='Migrantes',
+            color='Región destino'
+        )
+    )    
+    vis2.on(fig2).plot()
+    fig2.tight_layout()
+    fig2.savefig('resultados/migras_desde_Africa.png', bbox_inches='tight', dpi=300)
+
+
+
+def graficar_desglose_ZZ_africa(tabla) -> Figure:
+
+    fig, eje = plt.subplots(figsize=(7, 12), dpi=300)
+    
+    mat_color = eje.imshow(
+        tabla,
+        aspect='auto',
+        cmap='BuPu'#'RdPu',
+    )
+
+    eje.set_xticks(range(len(tabla.columns)))
+    eje.set_xticklabels(tabla.columns)    
+    eje.set_yticks(range(len(tabla.index)))
+    eje.set_yticklabels(tabla.index)    
+    eje.tick_params(top=True, labeltop=True, bottom=True, labelbottom=True)
+    
+    barra_color = fig.colorbar(
+        mat_color, ax=eje, fraction=0.1, aspect=100, pad=0.02,  
+    )
+    barra_color.set_label('Inmigrantes con origen desconocido')    
+    plt.tight_layout()
+    plt.savefig('resultados/desglose_ZZ_africa.png', bbox_inches='tight', dpi=300)
+    plt.close()
+    
+    return fig
