@@ -453,10 +453,14 @@ def graficar_distribucion_pobla_emig_inmig(
             i += 1
     
     for (magnitud, _), indice in zip(lista_magnitudes_objetivo, indices_magnitud):
+        if indice == 3:
+            texto = 'POBLACIÓN'
+        else:
+            texto = magnitud.upper()
         ejes[indice].text(
             .5,
             .5,
-            magnitud.upper(),
+            texto,
             ha='center',
             fontsize=30,
             weight='bold',
@@ -492,20 +496,21 @@ def graficar_migraciones_africa(
     migras_desde_africa: pd.DataFrame,
 ) -> Figure:   
 
+
     fig1 = plt.figure(figsize=(9, 6), dpi=300)  
 
     # Hacia
     vis1 = (
         so.Plot(migras_hacia_africa, 'año', 'migrantes', color='region_orig_ES')
-        .add(so.Dot(pointsize=4))
-        .add(so.Line(linewidth=1.5))
+        .add(so.Dot(pointsize=3.5))
+        .add(so.Line(linewidth=1.7))
         .scale(color='colorblind')
             .layout(size=(9, 6))
         .label(
-            title='Migraciones hacia África desde las distintas regiones',
+            title='Migraciones hacia África desde otros continentes',
             x='Año',
             y='Migrantes',
-            color='Región origen'
+            color='Continente origen'
         )
     )    
     vis1.on(fig1).plot()
@@ -516,15 +521,15 @@ def graficar_migraciones_africa(
     fig2 = plt.figure(figsize=(9, 6), dpi=300)
     vis2 = (
         so.Plot(migras_desde_africa, 'año', 'migrantes', color='region_des_ES')
-        .add(so.Dot(pointsize=4))
-        .add(so.Line(linewidth=1.5))
+        .add(so.Dot(pointsize=3.5))
+        .add(so.Line(linewidth=1.7))
         .scale(color='colorblind')
             .layout(size=(9, 6))
         .label(
-            title='Migraciones desde África hacia las distintas regiones',
+            title='Migraciones desde África hacia otros continentes',
             x='Año',
             y='Migrantes',
-            color='Región destino'
+            color='Continente destino'
         )
     )    
     vis2.on(fig2).plot()
@@ -533,14 +538,35 @@ def graficar_migraciones_africa(
 
 
 
+# Función para convertir valores
+def convertir_valor(valor: int, redondeo:int = 2) -> str:
+    if valor < 1e3:
+        return f'{valor}'
+    elif valor < 1e6:
+        prefijo = 'k'
+        denominador = 1e3
+    else:
+        prefijo = 'M'
+        denominador = 1e6
+    conversion = valor / denominador
+    valor_redondeado = round(conversion, redondeo)
+    # si el decimal es 0 lo descarto
+    if valor_redondeado.is_integer():
+        return f'{int(valor_redondeado)}{prefijo}'
+    else:
+        return f'{valor_redondeado}{prefijo}'
+    
+
+
+
 def graficar_desglose_ZZ_africa(tabla) -> Figure:
 
-    fig, eje = plt.subplots(figsize=(7, 12), dpi=300)
+    fig, eje = plt.subplots(figsize=(8, 8), dpi=300)
     
     mat_color = eje.imshow(
         tabla,
         aspect='auto',
-        cmap='BuPu'#'RdPu',
+        cmap='RdPu',
     )
 
     eje.set_xticks(range(len(tabla.columns)))
@@ -548,6 +574,24 @@ def graficar_desglose_ZZ_africa(tabla) -> Figure:
     eje.set_yticks(range(len(tabla.index)))
     eje.set_yticklabels(tabla.index)    
     eje.tick_params(top=True, labeltop=True, bottom=True, labelbottom=True)
+
+    
+    for i in range(len(tabla.index)):
+        for j in range(len(tabla.columns)):
+            if i == 1 and j == 5:
+                color_tex = 'yellow'
+            else:
+                color_tex = 'black'
+                
+            valor = tabla.iloc[i, j]
+            eje.text(
+                j, i, 
+                convertir_valor(valor),
+                ha='center', 
+                va='center', 
+                color=color_tex,
+                fontsize=7,
+            )
     
     barra_color = fig.colorbar(
         mat_color, ax=eje, fraction=0.1, aspect=100, pad=0.02,  
