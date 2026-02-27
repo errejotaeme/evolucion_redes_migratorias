@@ -35,7 +35,7 @@ cod_m49,iso3,name_en,name_es,subregion,region
 231,ETH,Ethiopia,Etiopía,África Oriental,África
 232,ERI,Eritrea,Eritrea,África Oriental,África
 233,EST,Estonia,Estonia,Europa Septentrional,Europa
-238,FLK,Falkland Islands (Malvinas),Islas Malvinas,América del Sur,América Latina y el Caribe
+238,FLK,Malvinas Islands,Islas Malvinas,América del Sur,América Latina y el Caribe
 24,AGO,Angola,Angola,África Central,África
 242,FJI,Fiji,Fiji,Melanesia,Oceanía
 246,FIN,Finland,Finlandia,Europa Septentrional,Europa
@@ -45,7 +45,7 @@ cod_m49,iso3,name_en,name_es,subregion,region
 266,GAB,Gabon,Gabón,África Central,África
 268,GEO,Georgia,Georgia,Asia Occidental,Asia
 270,GMB,Gambia,Gambia,África Occidental,África
-275,PSE,State of Palestine,Palestina,Asia Occidental,Asia
+275,PSE,Palestine,Palestina,Asia Occidental,Asia
 276,DEU,Germany,Alemania,Europa Occidental,Europa
 28,ATG,Antigua and Barbuda,Antigua y Barbuda,Caribe,América Latina y el Caribe
 288,GHA,Ghana,Ghana,África Occidental,África
@@ -59,13 +59,13 @@ cod_m49,iso3,name_en,name_es,subregion,region
 328,GUY,Guyana,Guyana,América del Sur,América Latina y el Caribe
 332,HTI,Haiti,Haití,Caribe,América Latina y el Caribe
 340,HND,Honduras,Honduras,América Central,América Latina y el Caribe
-344,HKG,China, Hong Kong Special Administrative Region,Hong Kong,Asia Oriental,Asia
+344,HKG,Hong Kong,Hong Kong,Asia Oriental,Asia
 348,HUN,Hungary,Hungría,Europa Oriental,Europa
 352,ISL,Iceland,Islandia,Europa Septentrional,Europa
 356,IND,India,India,Asia Meridional,Asia
 36,AUS,Australia,Australia,Australia/Nueva Zelanda,Oceanía
 360,IDN,Indonesia,Indonesia,Asia Sudoriental,Asia
-364,IRN,Iran (Islamic Republic of),Irán,Asia Meridional,Asia
+364,IRN,Iran,Irán,Asia Meridional,Asia
 368,IRQ,Iraq,Iraq,Asia Occidental,Asia
 372,IRL,Ireland,Irlanda,Europa Septentrional,Europa
 376,ISR,Israel,Israel,Asia Occidental,Asia
@@ -78,11 +78,11 @@ cod_m49,iso3,name_en,name_es,subregion,region
 40,AUT,Austria,Austria,Europa Occidental,Europa
 400,JOR,Jordan,Jordania,Asia Occidental,Asia
 404,KEN,Kenya,Kenya,África Oriental,África
-408,PRK,Democratic People's Republic of Korea,Corea del Norte,Asia Oriental,Asia
-410,KOR,Republic of Korea,Corea del Sur,Asia Oriental,Asia
+408,PRK,North Korea,Corea del Norte,Asia Oriental,Asia
+410,KOR,South Korea,Corea del Sur,Asia Oriental,Asia
 414,KWT,Kuwait,Kuwait,Asia Occidental,Asia
 417,KGZ,Kyrgyzstan,Kirguistán,Asia Central,Asia
-418,LAO,Lao People's Democratic Republic,República Democrática Popular Lao,Asia Sudoriental,Asia
+418,LAO,Lao,Lao,Asia Sudoriental,Asia
 422,LBN,Lebanon,Líbano,Asia Occidental,Asia
 426,LSO,Lesotho,Lesotho,África Meridional,África
 428,LVA,Latvia,Letonia,Europa Septentrional,Europa
@@ -92,7 +92,7 @@ cod_m49,iso3,name_en,name_es,subregion,region
 44,BHS,Bahamas,Bahamas,Caribe,América Latina y el Caribe
 440,LTU,Lithuania,Lituania,Europa Septentrional,Europa
 442,LUX,Luxembourg,Luxemburgo,Europa Occidental,Europa
-446,MAC,China, Macao Special Administrative Region,Macao,Asia Oriental,Asia
+446,MAC,Macao,Macao,Asia Oriental,Asia
 450,MDG,Madagascar,Madagascar,África Oriental,África
 454,MWI,Malawi,Malawi,África Oriental,África
 458,MYS,Malaysia,Malasia,Asia Sudoriental,Asia
@@ -105,7 +105,7 @@ cod_m49,iso3,name_en,name_es,subregion,region
 484,MEX,Mexico,México,América Central,América Latina y el Caribe
 492,MCO,Monaco,Mónaco,Europa Occidental,Europa
 496,MNG,Mongolia,Mongolia,Asia Oriental,Asia
-498,MDA,Republic of Moldova,República de Moldova,Europa Oriental,Europa
+498,MDA,Moldova,Moldova,Europa Oriental,Europa
 499,MNE,Montenegro,Montenegro,Europa Meridional,Europa
 50,BGD,Bangladesh,Bangladesh,Asia Meridional,Asia
 504,MAR,Morocco,Marruecos,África Septentrional,África
@@ -116,7 +116,7 @@ cod_m49,iso3,name_en,name_es,subregion,region
 52,BRB,Barbados,Barbados,Caribe,América Latina y el Caribe
 520,NRU,Nauru,Nauru,Micronesia,Oceanía
 524,NPL,Nepal,Nepal,Asia Meridional,Asia
-528,NLD,Netherlands (Kingdom of the),Países Bajos,Europa Occidental,Europa
+528,NLD,Netherlands,Países Bajos,Europa Occidental,Europa
 548,VUT,Vanuatu,Vanuatu,Melanesia,Oceanía
 554,NZL,New Zealand,Nueva Zelandia,Australia/Nueva Zelanda,Oceanía
 558,NIC,Nicaragua,Nicaragua,América Central,América Latina y el Caribe
@@ -124,7 +124,7 @@ cod_m49,iso3,name_en,name_es,subregion,region
 562,NER,Niger,Níger,África Occidental,África
 566,NGA,Nigeria,Nigeria,África Occidental,África
 578,NOR,Norway,Noruega,Europa Septentrional,Europa
-583,FSM,Micronesia (Federated States of),Micronesia,Micronesia,Oceanía
+583,FSM,Micronesia,Micronesia,Micronesia,Oceanía
 584,MHL,Marshall Islands,Islas Marshall,Micronesia,Oceanía
 585,PLW,Palau,Palau,Micronesia,Oceanía
 586,PAK,Pakistan,Pakistán,Asia Meridional,Asia
@@ -141,14 +141,14 @@ cod_m49,iso3,name_en,name_es,subregion,region
 634,QAT,Qatar,Qatar,Asia Occidental,Asia
 64,BTN,Bhutan,Bhután,Asia Meridional,Asia
 642,ROU,Romania,Rumania,Europa Oriental,Europa
-643,RUS,Russian Federation,Rusia,Europa Oriental,Europa
+643,RUS,Russia,Rusia,Europa Oriental,Europa
 646,RWA,Rwanda,Rwanda,África Oriental,África
 659,KNA,Saint Kitts and Nevis,Saint Kitts y Nevis,Caribe,América Latina y el Caribe
 662,LCA,Saint Lucia,Santa Lucía,Caribe,América Latina y el Caribe
 670,VCT,Saint Vincent and the Grenadines,San Vicente y las Granadinas,Caribe,América Latina y el Caribe
 674,SMR,San Marino,San Marino,Europa Meridional,Europa
 678,STP,Sao Tome and Principe,Santo Tomé y Príncipe,África Central,África
-68,BOL,Bolivia (Plurinational State of),Bolivia,América del Sur,América Latina y el Caribe
+68,BOL,Bolivia,Bolivia,América del Sur,América Latina y el Caribe
 682,SAU,Saudi Arabia,Arabia Saudita,Asia Occidental,Asia
 686,SEN,Senegal,Senegal,África Occidental,África
 688,SRB,Serbia,Serbia,Europa Meridional,Europa
@@ -188,14 +188,14 @@ cod_m49,iso3,name_en,name_es,subregion,region
 804,UKR,Ukraine,Ucrania,Europa Oriental,Europa
 807,MKD,North Macedonia,Macedonia del Norte,Europa Meridional,Europa
 818,EGY,Egypt,Egipto,África Septentrional,África
-826,GBR,United Kingdom of Great Britain and Northern Ireland,Reino Unido,Europa Septentrional,Europa
-834,TZA,United Republic of Tanzania,Tanzanía,África Oriental,África
+826,GBR,Great Britain,Reino Unido,Europa Septentrional,Europa
+834,TZA,Tanzania,Tanzanía,África Oriental,África
 84,BLZ,Belize,Belice,América Central,América Latina y el Caribe
 840,USA,United States of America,Estados Unidos de América,América del Norte,América del Norte
 854,BFA,Burkina Faso,Burkina Faso,África Occidental,África
 858,URY,Uruguay,Uruguay,América del Sur,América Latina y el Caribe
 860,UZB,Uzbekistan,Uzbekistán,Asia Central,Asia
-862,VEN,Venezuela (Bolivarian Republic of),Venezuela,América del Sur,América Latina y el Caribe
+862,VEN,Venezuela,Venezuela,América del Sur,América Latina y el Caribe
 882,WSM,Samoa,Samoa,Polinesia,Oceanía
 887,YEM,Yemen,Yemen,Asia Occidental,Asia
 894,ZMB,Zambia,Zambia,África Oriental,África
