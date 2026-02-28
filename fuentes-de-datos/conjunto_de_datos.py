@@ -189,7 +189,12 @@ df_m49 = (
 # Los agregamos después de sumarlos a la tabla para que no haya repetidos
 codigos_m49.add(np.int64(158))
 codigos_m49.add(np.int64(2003))
-# df_m49.to_csv('m49.csv', index=False)
+try:
+    check =open('fuentes-de-datos/m49.csv', 'r')
+    check.close()
+except FileNotFoundError:
+    df_m49.to_csv('fuentes-de-datos/m49.csv', index=False)
+
 
 
 # df auxiliar para agregrar códigos en las tablas
@@ -207,7 +212,11 @@ df_coordenadas = (
     .sort_values('iso3_coord', ascending=True)
     .reset_index(drop=True)
 )
-# df_coordenadas.to_csv('coordenadas.csv', index=False)
+try:
+    check =open('fuentes-de-datos/coordenadas.csv', 'r')
+    check.close()
+except FileNotFoundError:
+    df_coordenadas.to_csv('fuentes-de-datos/coordenadas.csv', index=False)
 print('Operación finalizada.')
 
 
@@ -273,7 +282,11 @@ df_poblaciones = (
     .sort_values(['iso3_pobla','año_pobla'], ascending=[True, True])
     .reset_index(drop=True)
 )
-# df_poblaciones.to_csv('poblaciones.csv', index=False)
+try:
+    check =open('fuentes-de-datos/poblaciones.csv', 'r')
+    check.close()
+except FileNotFoundError:
+    df_poblaciones.to_csv('fuentes-de-datos/poblaciones.csv', index=False)
 
 print('Operación finalizada.')
 
@@ -401,8 +414,16 @@ df_migraciones = (
 )
 
 # Exportamos las tablas
-# df_migraciones.to_csv('migraciones.csv', index=False)
-# df_migras_original.to_csv('migraciones_original.csv', index=False)
+try:
+    check =open('fuentes-de-datos/migraciones.csv', 'r')
+    check.close()
+except FileNotFoundError:
+    df_migraciones.to_csv('fuentes-de-datos/migraciones.csv', index=False)
+try:
+    check =open('fuentes-de-datos/migraciones_original.csv', 'r')
+    check.close()
+except FileNotFoundError:
+    df_migras_original.to_csv('fuentes-de-datos/migraciones_original.csv', index=False)
 print('Operación finalizada.')
 
 
@@ -545,7 +566,12 @@ df_migras_90_24 = (
     .reset_index(drop=True)
 )
 df_migras_90_24 = df_migras_90_24.fillna(0)
-# df_migras_90_24.to_csv('migras_90_24.csv', index=False)
+try:
+    check =open('fuentes-de-datos/migras_90_24.csv', 'r')
+    check.close()
+except FileNotFoundError:
+    df_migras_90_24.to_csv('fuentes-de-datos/migras_90_24.csv', index=False)
+
 
 print('Operación finalizada.')
 tex_m49 = '\n• df_m49: códigos y clasificaciones de países, e indicadores estructurales.'
@@ -557,5 +583,5 @@ tex_migras_90_24 = '\n• df_migras_90_24: reúne los datos anteriores.'
 dfs_disponibles = (
     tex_m49 + tex_pobla + tex_coord + tex_migras_orig + tex_migras + tex_migras_90_24
 )
-print(f'\nDatos disponibles\n{'-'*len('Datos disponibles')}{dfs_disponibles}')
+print(f'\nDatos disponibles\n{dfs_disponibles}')
 
