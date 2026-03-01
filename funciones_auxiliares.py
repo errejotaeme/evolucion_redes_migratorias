@@ -613,38 +613,41 @@ def graficar_desglose_ZZ_africa(tabla) -> Figure:
 
     
 def graficar_bloques_africa(
-    dicc_bloques_ppales: dict[int, set[str]],
+    paises_sin_bloque: set[str],
+    dicc_bloques_asignados: dict[int, set[str]],
     dicc_cohesion_por_bloque:  dict[int, float],
     df_coords: pd.DataFrame,
 ) -> Figure: 
 
     paises_africa = [
         pais 
-        for bloques in dicc_bloques_ppales.values() 
+        for bloques in dicc_bloques_asignados.values() 
         for pais in bloques
     ]
     
     # Creamos la red que permite graficar sobre el mapa
     red_bloques = nx.Graph()
-    for bloque, cohesion  in zip(dicc_bloques_ppales.values(), dicc_cohesion_por_bloque.values()):
+    for bloque, cohesion  in zip(dicc_bloques_asignados.values(), dicc_cohesion_por_bloque.values()):
         for tupla_miembros in itertools.combinations(bloque, 2):
             # Nombres de países
             m1 = tupla_miembros[0]
             m2 = tupla_miembros[1]
+            
             # Posiciones de los países
             lon_m1 = df_coords.loc[df_coords.iso3_coord == m1, 'lon'].iloc[0]
             lat_m1 = df_coords.loc[df_coords.iso3_coord == m1, 'lat'].iloc[0]        
             lon_m2 = df_coords.loc[df_coords.iso3_coord == m2, 'lon'].iloc[0]
             lat_m2 = df_coords.loc[df_coords.iso3_coord == m2, 'lat'].iloc[0]        
-    
+
             # Agregamos el vínculo
             red_bloques.add_edge(m1, m2, weight=cohesion)
-            
+
             # Si el nodo origen aún no fue ingresado
             if not bool(red_bloques.nodes[m1]):
                 red_bloques.add_node(m1, pos=(lon_m1, lat_m1))
             if not bool(red_bloques.nodes[m2]):  
                 red_bloques.add_node(m2, pos=(lon_m2, lat_m2))
+
     
     # Configuración de la visualización
     # Tamaño del gráfico
@@ -660,7 +663,7 @@ def graficar_bloques_africa(
     # Colores del grafo
     color_titulo = '#0c0c0c'
     color_nodos = '#ba0000'
-    color_aris = '#00eb4a'#5eebc1'
+    color_aris = '#000000'#5eebc1'
     color_etq_pais = '#000000'
     # Paleta de colores para los nodos
     paleta = [
@@ -670,7 +673,7 @@ def graficar_bloques_africa(
         '#f98c78',
         '#b172ff',
         '#06c9d3',
-        '#a19427',
+        '#377054',
         '#f1d438',
         '#f8474a',
         '#3e38ff',
@@ -681,7 +684,7 @@ def graficar_bloques_africa(
     # Tamaños de fuentes
     tam_tex_etq = 12 # nodos
     tam_tex_titulo = 17 # título gráfico
-    tam_tex_ref = 14 # referencias
+    tam_tex_ref = 17 # referencias
     
     # Vsualización de la red
     fig = plt.figure(figsize=tam_figura)
@@ -733,7 +736,7 @@ def graficar_bloques_africa(
         
     
     # Geometrías de países
-    for i, bloque in enumerate(dicc_bloques_ppales.values()):
+    for i, bloque in enumerate(dicc_bloques_asignados.values()):
         for pais in bloque:
             if poligonos_paises.get(pais, None):
                 eje.add_geometries(
@@ -742,7 +745,8 @@ def graficar_bloques_africa(
                     edgecolor='black',
                     linewidth=.6,
                     facecolor=paleta[i],
-                    alpha=.7
+                    alpha=.7,
+                    hatch='//' if pais in paises_sin_bloque else None
                 )
             if pais == 'SOM':                   
                 eje.add_geometries(
@@ -751,10 +755,11 @@ def graficar_bloques_africa(
                     edgecolor='black',
                     linewidth=.6,
                     facecolor=paleta[i],
-                    alpha=.7
+                    alpha=.7, 
+                    hatch='//' if pais in paises_sin_bloque else None
                 )
     
-    for i, bloque in enumerate(dicc_bloques_ppales.values()):
+    for i, bloque in enumerate(dicc_bloques_asignados.values()):
         for pais in bloque:
             if pais in ['MUS', 'SYC', 'COM', 'STP', 'CPV']:
                 tamaño_nodo = 900
@@ -772,20 +777,26 @@ def graficar_bloques_africa(
             )
     
     
-    # ETIQUETAS
+    # ETIQUETAS    
     for nodo in red_bloques.nodes():
+        if nodo in paises_sin_bloque:
+            fuente = 'normal'
+        else: 
+            fuente = 'black'            
         nx.draw_networkx_labels(
             red_bloques,
             posiciones_ingresadas,
             labels={nodo: nodo},
             font_color=color_etq_pais,
-            font_weight='bold',
+            font_weight=fuente,
             alpha=1,
             font_size=tam_tex_etq,
             ax=eje,
         )
+
+
     
-    
+    # REFERENCIAS
     lista_ref = []
     for i, cohesion in dicc_cohesion_por_bloque.items():
         lista_ref.append(
@@ -810,9 +821,8 @@ def graficar_bloques_africa(
     eje.add_artist(ref1)
     
     
-    titulo = 'Bloques de países según migración recíproca (1990-2024)'
     eje.set_title(
-        titulo, 
+        '',
         fontsize=tam_tex_titulo,
         color=color_titulo,
     )
