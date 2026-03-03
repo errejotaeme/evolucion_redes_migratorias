@@ -493,10 +493,71 @@ def graficar_distribucion_pobla_emig_inmig(
     return fig
 
 
+def graficar_corredores_principales(
+    df_migraciones: pd.DataFrame,
+    año: int = 2024,
+    top_n: int = 30,
+    palette: str = 'viridis',
+    out_path: str = 'resultados/corredores_2024_top30.png',
+) -> tuple:
+    """
+    Construye el Top N corredores a partir del DF de migraciones y grafica. 
+    Parámetros:
+      - df_migraciones: DF con columnas 'origen_ES','destino_ES','año','migrantes'
+      - año: año a filtrar
+      - top_n: cantidad de corredores a mostrar
+      - palette: paleta de matplotlib (ej. 'viridis', 'plasma')
+      - out_path: ruta de salida para la imagen
+
+    """
+    # Copia y conversión
+    df = df_migraciones.copy()
+    if 'migrantes' in df.columns:
+        df['migrantes'] = pd.to_numeric(df['migrantes'], errors='coerce').fillna(0)
+    if 'año' in df.columns:
+        df['año'] = df['año'].astype(int)
+
+    # Filtro por año
+    df_a = df[df['año'] == int(año)].copy()
+
+    # Columnas de origen/destino en español
+    df_a['origen_nombre_sp'] = df_a['origen_ES'].astype(str)
+    df_a['destino_nombre_sp'] = df_a['destino_ES'].astype(str)
+    df_a['corredor'] = df_a['origen_nombre_sp'] + ' → ' + df_a['destino_nombre_sp']
+
+    agg = df_a.groupby(['corredor', 'origen_nombre_sp', 'destino_nombre_sp'], as_index=False)['migrantes'].sum()
+    agg = agg.rename(columns={'migrantes': 'stock'})
+
+    top_vis = agg.sort_values('stock', ascending=False).head(int(top_n)).reset_index(drop=True)
+
+    labels = [f"{row['origen_nombre_sp'][:20]} → {row['destino_nombre_sp'][:20]}" for _, row in top_vis.iterrows()]
+
+    cmap = plt.get_cmap(palette)
+    colors = cmap(np.linspace(0.3, 0.9, len(top_vis)))
+
+    fig, ax = plt.subplots(figsize=(14, max(6, 0.35 * len(top_vis))))
+
+    ax.barh(range(len(top_vis)), top_vis['stock'].astype(float), color=colors)
+    ax.set_yticks(range(len(top_vis)))
+    ax.set_yticklabels(labels, fontsize=8)
+    ax.set_xlabel('Stock de migrantes', fontsize=11, fontweight='bold')
+    ax.set_title(f'Top {len(top_vis)} Corredores Migratorios por Stock Absoluto ({año})', fontsize=14, fontweight='bold')
+    ax.invert_yaxis()
+    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'{int(x/1e6):.1f}M'))
+    ax.grid(axis='x', alpha=0.3, linestyle='--')
+
+    plt.tight_layout()
+    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    plt.savefig(out_path, dpi=300, bbox_inches='tight')
+    plt.close()
+    return fig, ax
+
+
 
 
     
 def graficar_migraciones_africa(
+        
     migras_hacia_africa: pd.DataFrame,
     migras_desde_africa: pd.DataFrame,
 ) -> Figure:   
