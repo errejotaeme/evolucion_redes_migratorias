@@ -581,14 +581,23 @@ def graficar_desglose_ZZ_africa(tabla) -> Figure:
     eje.tick_params(top=True, labeltop=True, bottom=True, labelbottom=True)
 
     
+    barra_color = fig.colorbar(
+        mat_color, ax=eje, fraction=0.1, aspect=100, pad=0.02,  
+    )
+    barra_color.set_label('Inmigrantes con origen desconocido')
+    marcas = barra_color.get_ticks()
+    ultima_marca_visible = marcas[-2]
+    
     for i in range(len(tabla.index)):
         for j in range(len(tabla.columns)):
-            if i == 1 and j == 5:
+            
+            valor = tabla.iloc[i, j]
+            
+            if valor > ultima_marca_visible:
                 color_tex = 'yellow'
             else:
                 color_tex = 'black'
                 
-            valor = tabla.iloc[i, j]
             eje.text(
                 j, i, 
                 convertir_valor(valor),
@@ -598,10 +607,7 @@ def graficar_desglose_ZZ_africa(tabla) -> Figure:
                 fontsize=7,
             )
     
-    barra_color = fig.colorbar(
-        mat_color, ax=eje, fraction=0.1, aspect=100, pad=0.02,  
-    )
-    barra_color.set_label('Inmigrantes con origen desconocido')    
+  
     plt.tight_layout()
     plt.savefig('resultados/desglose_ZZ_africa.png', bbox_inches='tight', dpi=300)
     plt.close()
