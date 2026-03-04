@@ -323,21 +323,25 @@ def graficar_comunidades_ppales(
 
 
 def cargar_nombres_es(
-    path: str = 'fuentes-de-datos/nombres_es.csv', 
+    path: str | None = None,
     key: str = 'iso3'
-    ) -> dict:
-    """Carga el listado de nombres normalizado 
-    devuelve dict {key: name_es}.
-    key puede ser 'iso3' o 'cod_m49'.
+) -> dict:
+    """Carga el listado de nombres normalizado.
+    Devuelve {clave: name_es}. clave puede ser 'iso3' o 'cod_m49'.
+    Si se elige cod_m49, las claves se convierten a int.
     """
-    p = Path(path)
+    if path is None:
+        p = Path(__file__).resolve().parent / 'fuentes-de-datos' / 'nombres_es.csv'
+    else:
+        p = Path(path)
+    
     m = pd.read_csv(p, dtype=str)
     if key not in m.columns:
-        raise KeyError(f"La clave '{key}' no está en el listado")
-    m[key] = m[key].astype(str)
+        raise KeyError(f"La clave '{key}' no está en el listado. Columnas disponibles: {list(m.columns)}")
+    if key == 'cod_m49':
+        m[key] = pd.to_numeric(m[key], errors='coerce').dropna().astype(int)
     m['name_es'] = m.get('name_es', '').fillna('').astype(str)
     return dict(zip(m[key], m['name_es']))
-
 
 
 
@@ -493,6 +497,7 @@ def graficar_distribucion_pobla_emig_inmig(
     return fig
 
 
+
 def graficar_corredores_principales(
     df_migraciones: pd.DataFrame,
     año: int = 2024,
@@ -503,45 +508,53 @@ def graficar_corredores_principales(
     """
     Construye el Top N corredores a partir del DF de migraciones y grafica. 
     Parámetros:
-      - df_migraciones: DF con columnas 'origen_ES','destino_ES','año','migrantes'
+      - df_migraciones: DF con columnas 'cod_orig','cod_des','año','migrantes'
       - año: año a filtrar
       - top_n: cantidad de corredores a mostrar
       - palette: paleta de matplotlib (ej. 'viridis', 'plasma')
       - out_path: ruta de salida para la imagen
-
     """
-    # Copia y conversión
+    dicc_nombres_es = cargar_nombres_es(key='cod_m49')  # claves: int
+
     df = df_migraciones.copy()
     if 'migrantes' in df.columns:
         df['migrantes'] = pd.to_numeric(df['migrantes'], errors='coerce').fillna(0)
     if 'año' in df.columns:
         df['año'] = df['año'].astype(int)
 
-    # Filtro por año
+    # Numérico para que coincida con las claves int del diccionario
+    df['cod_orig'] = pd.to_numeric(df['cod_orig'], errors='coerce')
+    df['cod_des']  = pd.to_numeric(df['cod_des'],  errors='coerce')
+
     df_a = df[df['año'] == int(año)].copy()
 
-    # Columnas de origen/destino en español
-    df_a['origen_nombre_sp'] = df_a['origen_ES'].astype(str)
-    df_a['destino_nombre_sp'] = df_a['destino_ES'].astype(str)
+    df_a['origen_nombre_sp'] = df_a['cod_orig'].map(dicc_nombres_es)
+    df_a['destino_nombre_sp'] = df_a['cod_des'].map(dicc_nombres_es)
     df_a['corredor'] = df_a['origen_nombre_sp'] + ' → ' + df_a['destino_nombre_sp']
 
-    agg = df_a.groupby(['corredor', 'origen_nombre_sp', 'destino_nombre_sp'], as_index=False)['migrantes'].sum()
-    agg = agg.rename(columns={'migrantes': 'stock'})
+    agg = df_a.groupby(
+        ['corredor', 'origen_nombre_sp', 'destino_nombre_sp'], as_index=False
+    )['migrantes'].sum().rename(columns={'migrantes': 'stock'})
 
     top_vis = agg.sort_values('stock', ascending=False).head(int(top_n)).reset_index(drop=True)
 
-    labels = [f"{row['origen_nombre_sp'][:20]} → {row['destino_nombre_sp'][:20]}" for _, row in top_vis.iterrows()]
+    labels = [
+        f"{row['origen_nombre_sp'][:20]} → {row['destino_nombre_sp'][:20]}"
+        for _, row in top_vis.iterrows()
+    ]
 
-    cmap = plt.get_cmap(palette)
+    cmap   = plt.get_cmap(palette)
     colors = cmap(np.linspace(0.3, 0.9, len(top_vis)))
 
     fig, ax = plt.subplots(figsize=(14, max(6, 0.35 * len(top_vis))))
-
     ax.barh(range(len(top_vis)), top_vis['stock'].astype(float), color=colors)
     ax.set_yticks(range(len(top_vis)))
     ax.set_yticklabels(labels, fontsize=8)
     ax.set_xlabel('Stock de migrantes', fontsize=11, fontweight='bold')
-    ax.set_title(f'Top {len(top_vis)} Corredores Migratorios por Stock Absoluto ({año})', fontsize=14, fontweight='bold')
+    ax.set_title(
+        f'Top {len(top_vis)} Corredores Migratorios por Stock Absoluto ({año})',
+        fontsize=14, fontweight='bold'
+    )
     ax.invert_yaxis()
     ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'{int(x/1e6):.1f}M'))
     ax.grid(axis='x', alpha=0.3, linestyle='--')
