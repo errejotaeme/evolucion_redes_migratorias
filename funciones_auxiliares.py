@@ -505,6 +505,7 @@ def graficar_corredores_principales(
     palette: str = 'viridis',
     out_path: str | None = None,
     show=False,
+    xlim: tuple | None = None,
 ) -> tuple:
     """
     Construye el Top N corredores a partir del DF de migraciones y grafica. 
@@ -514,9 +515,12 @@ def graficar_corredores_principales(
       - top_n: cantidad de corredores a mostrar
       - palette: paleta de matplotlib (ej. 'viridis', 'plasma')
       - out_path: ruta de salida para la imagen
+      - show: si True, muestra el gráfico al finalizar
+      - xlim: tupla (min, max) para el límite del eje x. Sino, se ajusta automáticamente.
     """
     if out_path is None:
         out_path = f'resultados/corredores_{año}_top{top_n}.png'
+
     dicc_nombres_es = cargar_nombres_es(key='cod_m49')  # claves: int
 
     df = df_migraciones.copy()
@@ -562,6 +566,9 @@ def graficar_corredores_principales(
     ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'{int(x/1e6):.1f}M'))
     ax.grid(axis='x', alpha=0.3, linestyle='--')
 
+    if xlim is not None:
+        ax.set_xlim(*xlim)
+
     plt.tight_layout()
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(out_path, dpi=300, bbox_inches='tight')
@@ -570,6 +577,203 @@ def graficar_corredores_principales(
     plt.close()
     return fig, ax
 
+
+
+
+
+def graficar_red_corredores(
+    df_migraciones: pd.DataFrame,
+    df_coordenadas: pd.DataFrame,
+    año: int = 2024,
+    threshold_pct: float = 1.0,
+    palette: str = 'YlOrRd',
+    tipo_linea: str = 'recta',
+    dpi: int = 300,
+    excluir_otros: bool = True,
+    out_path: str | None = None,
+    show: bool = False,
+) -> tuple:
+    """
+    Grafica la red global de corredores migratorios para un año dado.
+
+    Parámetros:
+      - df_migraciones : DF con columnas cod_orig, iso3_orig, cod_des, iso3_des, año, migrantes
+      - df_coordenadas : DF con columnas iso3_coord, lat, lon
+      - año            : año a visualizar
+      - threshold_pct  : porcentaje superior de aristas a mostrar por peso (ej: 1 → top 1%)
+      - palette        : paleta matplotlib para nodos
+      - tipo_linea     : 'recta' o 'geodesica'
+      - ancho_px       : ancho de salida en píxeles (default 6000)
+      - excluir_otros  : excluir el nodo ZZZ ('Otros / origen desconocido')
+      - out_path       : ruta de salida; si es None se genera automáticamente
+      - show           : mostrar en notebook
+    """
+    import cartopy.crs as ccrs
+    import cartopy.feature as cfeature
+
+    if out_path is None:
+        out_path = f'resultados/red_corredores_{año}_top{int(threshold_pct)}pct.png'
+
+    dicc_nombres = cargar_nombres_es(key='iso3')
+
+    df = df_migraciones.copy()
+    df['migrantes'] = pd.to_numeric(df['migrantes'], errors='coerce').fillna(0)
+    df['año'] = df['año'].astype(int)
+    df_a = df[df['año'] == año].copy()
+
+    if excluir_otros:
+        df_a = df_a[(df_a['iso3_orig'] != 'ZZZ') & (df_a['iso3_des'] != 'ZZZ')]
+
+    coords = df_coordenadas.set_index('iso3_coord')[['lat', 'lon']].to_dict('index')
+
+    # --- Construir grafo ---
+    G = nx.DiGraph()
+
+    paises = pd.concat([
+        df_a[['iso3_orig']].rename(columns={'iso3_orig': 'iso3'}),
+        df_a[['iso3_des']].rename(columns={'iso3_des':  'iso3'}),
+    ]).drop_duplicates('iso3')
+
+    for _, row in paises.iterrows():
+        iso = row['iso3']
+        c = coords.get(iso, {})
+        if c:
+            G.add_node(iso, nombre=dicc_nombres.get(iso, iso), lat=c['lat'], lon=c['lon'])
+
+    for _, row in df_a.iterrows():
+        u, v, w = row['iso3_orig'], row['iso3_des'], row['migrantes']
+        if w > 0 and u in G.nodes and v in G.nodes:
+            if G.has_edge(u, v):
+                G[u][v]['weight'] += w
+            else:
+                G.add_edge(u, v, weight=w)
+
+    # --- Aplicar threshold ---
+    all_weights = np.array([d['weight'] for _, _, d in G.edges(data=True)])
+    umbral = np.percentile(all_weights, 100 - threshold_pct)
+    G_vis = nx.DiGraph()
+    G_vis.add_nodes_from(G.nodes(data=True))
+    G_vis.add_edges_from([(u, v, d) for u, v, d in G.edges(data=True) if d['weight'] >= umbral])
+
+    # --- Figura ---
+    ancho_in = 40
+    alto_in  = ancho_in * (9 / 16)
+
+    fig = plt.figure(figsize=(ancho_in, alto_in), dpi=dpi, facecolor='white')
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    ax.set_facecolor('white')
+
+    ax.add_feature(cfeature.LAND,      facecolor='#f2f2f2', alpha=1.0)
+    ax.add_feature(cfeature.OCEAN,     facecolor='#ddeeff', alpha=1.0)
+    ax.add_feature(cfeature.COASTLINE, linewidth=0.5, edgecolor='#888888')
+    ax.add_feature(cfeature.BORDERS,   linewidth=0.25, edgecolor='#aaaaaa')
+    ax.set_extent([-180, 180, -60, 90], crs=ccrs.PlateCarree())
+
+    gl = ax.gridlines(draw_labels=True, linewidth=0.3, alpha=0.4, linestyle='--', color='gray')
+    gl.top_labels   = False
+    gl.right_labels = False
+    gl.xlabel_style = {'size': 14, 'color': '#555555'}
+    gl.ylabel_style = {'size': 14, 'color': '#555555'}
+
+    # --- Aristas ---
+    transform_linea = ccrs.Geodetic() if tipo_linea == 'geodesica' else ccrs.PlateCarree()
+
+    pesos_vis = np.array([d['weight'] for _, _, d in G_vis.edges(data=True)])
+    log_min = np.log10(pesos_vis.min() + 1)
+    log_max = np.log10(pesos_vis.max() + 1)
+
+    LW_MIN, LW_MAX       = 0.2, 7.0
+    ALPHA_MIN, ALPHA_MAX = 0.04, 0.65
+
+    for u, v, data in G_vis.edges(data=True):
+        lon_u = G_vis.nodes[u].get('lon')
+        lat_u = G_vis.nodes[u].get('lat')
+        lon_v = G_vis.nodes[v].get('lon')
+        lat_v = G_vis.nodes[v].get('lat')
+        if None in (lon_u, lat_u, lon_v, lat_v):
+            continue
+
+        norm     = (np.log10(data['weight'] + 1) - log_min) / (log_max - log_min) if log_max > log_min else 0.5
+        norm_exp = norm ** 0.4
+
+        ax.plot(
+            [lon_u, lon_v], [lat_u, lat_v],
+            color='#cc2200',
+            linewidth=LW_MIN + (LW_MAX - LW_MIN) * norm_exp,
+            alpha=ALPHA_MIN + (ALPHA_MAX - ALPHA_MIN) * norm_exp,
+            transform=transform_linea,
+            zorder=2,
+            solid_capstyle='round',
+        )
+
+    # --- Nodos ---
+    grados = dict(G_vis.degree())
+    lons, lats, sizes, colores_nodo = [], [], [], []
+
+    for node_id, attrs in G_vis.nodes(data=True):
+        if 'lon' not in attrs or 'lat' not in attrs:
+            continue
+        lons.append(attrs['lon'])
+        lats.append(attrs['lat'])
+        grado = grados.get(node_id, 0)
+        sizes.append(max(120, grado ** 1.6 * 8))
+        colores_nodo.append(grado)
+
+    scatter = ax.scatter(
+        lons, lats,
+        s=sizes,
+        c=colores_nodo,
+        cmap=palette,
+        alpha=0.9,
+        edgecolors='#333333',
+        linewidths=0.6,
+        transform=ccrs.PlateCarree(),
+        zorder=5,
+    )
+
+    # --- Etiquetas top 20 por grado ---
+    top20 = sorted(
+        [(n, a) for n, a in G_vis.nodes(data=True) if 'lon' in a and 'lat' in a],
+        key=lambda x: grados.get(x[0], 0),
+        reverse=True
+    )[:20]
+
+    for node_id, attrs in top20:
+        ax.annotate(
+            attrs.get('nombre', node_id)[:22],
+            (attrs['lon'], attrs['lat']),
+            xytext=(8, 8),
+            textcoords='offset points',
+            fontsize=16,
+            fontweight='bold',
+            color='#111111',
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.7, linewidth=0),
+            zorder=6,
+            transform=ccrs.PlateCarree(),
+        )
+
+    cbar = plt.colorbar(scatter, ax=ax, fraction=0.018, pad=0.02, shrink=0.55)
+    cbar.set_label('Grado (conexiones)', rotation=270, labelpad=22, fontsize=16)
+    cbar.ax.tick_params(labelsize=13)
+
+    ax.set_title(
+        f'Red Global de Corredores Migratorios ({año})  —  Top {threshold_pct:.1f}% por stock absoluto\n'
+        f'Umbral: {umbral:,.0f} migrantes  |  '
+        f'{G_vis.number_of_nodes()} países  |  {G_vis.number_of_edges():,} aristas',
+        fontsize=22,
+        fontweight='bold',
+        color='#111111',
+        pad=18,
+    )
+
+    plt.tight_layout()
+    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    plt.savefig(out_path, dpi=dpi, bbox_inches='tight', facecolor='white')
+    if show:
+        plt.show()
+    plt.close()
+    print(f'Red guardada en: {out_path}')
+    return fig, ax
 
 
 
