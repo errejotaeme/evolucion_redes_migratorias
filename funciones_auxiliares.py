@@ -558,9 +558,17 @@ def graficar_corredores_principales(
     ax.set_yticks(range(len(top_vis)))
     ax.set_yticklabels(labels, fontsize=8)
     ax.set_xlabel('Stock de migrantes', fontsize=11, fontweight='bold')
-    ax.set_title(
-        f'Top {len(top_vis)} Corredores Migratorios por Stock Absoluto ({año})',
-        fontsize=14, fontweight='bold'
+    # No title by request; show the año discretely in the lower-left corner
+    ax.text(
+        0.01,
+        0.02,
+        str(año),
+        transform=ax.transAxes,
+        fontsize=10,
+        fontweight='semibold',
+        verticalalignment='bottom',
+        horizontalalignment='left',
+        color='0.15'
     )
     ax.invert_yaxis()
     ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'{int(x/1e6):.1f}M'))
