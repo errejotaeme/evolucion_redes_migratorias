@@ -2,7 +2,7 @@ cod_m49,iso3,name_en,name_es,subregion,region
 100,BGR,Bulgaria,Bulgaria,Europa Oriental,Europa
 104,MMR,Myanmar,Myanmar,Asia Sudoriental,Asia
 108,BDI,Burundi,Burundi,África Oriental,África
-112,BLR,Belarus,Belarús,Europa Oriental,Europa
+112,BLR,Belarus,Bielorrusia,Europa Oriental,Europa
 116,KHM,Cambodia,Camboya,Asia Sudoriental,Asia
 12,DZA,Algeria,Argelia,África Septentrional,África
 120,CMR,Cameroon,Camerún,África Central,África
@@ -157,7 +157,7 @@ cod_m49,iso3,name_en,name_es,subregion,region
 70,BIH,Bosnia and Herzegovina,Bosnia y Herzegovina,Europa Meridional,Europa
 702,SGP,Singapore,Singapur,Asia Sudoriental,Asia
 703,SVK,Slovakia,Eslovaquia,Europa Oriental,Europa
-704,VNM,Viet Nam,Viet Nam,Asia Sudoriental,Asia
+704,VNM,Viet Nam,Vietnam,Asia Sudoriental,Asia
 705,SVN,Slovenia,Eslovenia,Europa Meridional,Europa
 706,SOM,Somalia,Somalia,África Oriental,África
 710,ZAF,South Africa,Sudáfrica,África Meridional,África
@@ -166,7 +166,7 @@ cod_m49,iso3,name_en,name_es,subregion,region
 724,ESP,Spain,España,Europa Meridional,Europa
 728,SSD,South Sudan,Sudán del Sur,África Oriental,África
 729,SDN,Sudan,Sudán,África Septentrional,África
-732,ESH,Western Sahara,Sáhara Occidental,África Septentrional,África
+732,ESH,Western Sahara,Sahara Occidental,África Septentrional,África
 740,SUR,Suriname,Suriname,América del Sur,América Latina y el Caribe
 748,SWZ,Eswatini,Eswatini,África Meridional,África
 752,SWE,Sweden,Suecia,Europa Septentrional,Europa
@@ -180,7 +180,7 @@ cod_m49,iso3,name_en,name_es,subregion,region
 780,TTO,Trinidad and Tobago,Trinidad y Tabago,Caribe,América Latina y el Caribe
 784,ARE,United Arab Emirates,Emiratos Árabes Unidos,Asia Occidental,Asia
 788,TUN,Tunisia,Túnez,África Septentrional,África
-792,TUR,Türkiye,Türkiye,Asia Occidental,Asia
+792,TUR,Türkiye,Turquía,Asia Occidental,Asia
 795,TKM,Turkmenistan,Turkmenistán,Asia Central,Asia
 798,TUV,Tuvalu,Tuvalu,Polinesia,Oceanía
 8,ALB,Albania,Albania,Europa Meridional,Europa
@@ -191,7 +191,7 @@ cod_m49,iso3,name_en,name_es,subregion,region
 826,GBR,Great Britain,Reino Unido,Europa Septentrional,Europa
 834,TZA,Tanzania,Tanzanía,África Oriental,África
 84,BLZ,Belize,Belice,América Central,América Latina y el Caribe
-840,USA,United States of America,Estados Unidos de América,América del Norte,América del Norte
+840,USA,United States,Estados Unidos,América del Norte,América del Norte
 854,BFA,Burkina Faso,Burkina Faso,África Occidental,África
 858,URY,Uruguay,Uruguay,América del Sur,América Latina y el Caribe
 860,UZB,Uzbekistan,Uzbekistán,Asia Central,Asia

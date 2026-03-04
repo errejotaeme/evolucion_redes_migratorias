@@ -503,7 +503,8 @@ def graficar_corredores_principales(
     año: int = 2024,
     top_n: int = 30,
     palette: str = 'viridis',
-    out_path: str = 'resultados/corredores_2024_top30.png',
+    out_path: str | None = None,
+    show=False,
 ) -> tuple:
     """
     Construye el Top N corredores a partir del DF de migraciones y grafica. 
@@ -514,6 +515,8 @@ def graficar_corredores_principales(
       - palette: paleta de matplotlib (ej. 'viridis', 'plasma')
       - out_path: ruta de salida para la imagen
     """
+    if out_path is None:
+        out_path = f'resultados/corredores_{año}_top{top_n}.png'
     dicc_nombres_es = cargar_nombres_es(key='cod_m49')  # claves: int
 
     df = df_migraciones.copy()
@@ -562,6 +565,8 @@ def graficar_corredores_principales(
     plt.tight_layout()
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(out_path, dpi=300, bbox_inches='tight')
+    if show:
+        plt.show()
     plt.close()
     return fig, ax
 
