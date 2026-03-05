@@ -1,0 +1,203 @@
+cod_m49,iso2_m49,iso3_m49,pais_ES,region_ES,subregion_ES,pais_EN,region_EN,subregion_EN,menos_desarrollado,sin_litoral
+20,AD,AND,Andorra,Europa,Europa meridional,Andorra,Europe,Southern Europe,False,False
+784,AE,ARE,Emiratos Árabes Unidos,Asia,Asia occidental,United Arab Emirates,Asia,Western Asia,False,False
+4,AF,AFG,Afganistán,Asia,Asia meridional,Afghanistan,Asia,Southern Asia,True,True
+28,AG,ATG,Antigua y Barbuda,Américas,América Latina y el Caribe,Antigua and Barbuda,Americas,Latin America and the Caribbean,False,False
+8,AL,ALB,Albania,Europa,Europa meridional,Albania,Europe,Southern Europe,False,False
+51,AM,ARM,Armenia,Asia,Asia occidental,Armenia,Asia,Western Asia,False,True
+24,AO,AGO,Angola,África,África Subsahariana,Angola,Africa,Sub-Saharan Africa,True,False
+32,AR,ARG,Argentina,Américas,América Latina y el Caribe,Argentina,Americas,Latin America and the Caribbean,False,False
+40,AT,AUT,Austria,Europa,Europa occidental,Austria,Europe,Western Europe,False,False
+36,AU,AUS,Australia,Oceanía,Australia y Nueva Zelandia,Australia,Oceania,Australia and New Zealand,False,False
+31,AZ,AZE,Azerbaiyán,Asia,Asia occidental,Azerbaijan,Asia,Western Asia,False,True
+70,BA,BIH,Bosnia y Herzegovina,Europa,Europa meridional,Bosnia and Herzegovina,Europe,Southern Europe,False,False
+52,BB,BRB,Barbados,Américas,América Latina y el Caribe,Barbados,Americas,Latin America and the Caribbean,False,False
+50,BD,BGD,Bangladesh,Asia,Asia meridional,Bangladesh,Asia,Southern Asia,True,False
+56,BE,BEL,Bélgica,Europa,Europa occidental,Belgium,Europe,Western Europe,False,False
+854,BF,BFA,Burkina Faso,África,África Subsahariana,Burkina Faso,Africa,Sub-Saharan Africa,True,True
+100,BG,BGR,Bulgaria,Europa,Europa oriental,Bulgaria,Europe,Eastern Europe,False,False
+48,BH,BHR,Bahrein,Asia,Asia occidental,Bahrain,Asia,Western Asia,False,False
+108,BI,BDI,Burundi,África,África Subsahariana,Burundi,Africa,Sub-Saharan Africa,True,True
+204,BJ,BEN,Benin,África,África Subsahariana,Benin,Africa,Sub-Saharan Africa,True,False
+96,BN,BRN,Brunei Darussalam,Asia,Asia sudoriental,Brunei Darussalam,Asia,South-eastern Asia,False,False
+68,BO,BOL,Bolivia (Estado Plurinacional de),Américas,América Latina y el Caribe,Bolivia (Plurinational State of),Americas,Latin America and the Caribbean,False,True
+76,BR,BRA,Brasil,Américas,América Latina y el Caribe,Brazil,Americas,Latin America and the Caribbean,False,False
+44,BS,BHS,Bahamas,Américas,América Latina y el Caribe,Bahamas,Americas,Latin America and the Caribbean,False,False
+64,BT,BTN,Bhután,Asia,Asia meridional,Bhutan,Asia,Southern Asia,False,True
+72,BW,BWA,Botswana,África,África Subsahariana,Botswana,Africa,Sub-Saharan Africa,False,True
+112,BY,BLR,Belarús,Europa,Europa oriental,Belarus,Europe,Eastern Europe,False,False
+84,BZ,BLZ,Belice,Américas,América Latina y el Caribe,Belize,Americas,Latin America and the Caribbean,False,False
+124,CA,CAN,Canadá,Américas,América septentrional,Canada,Americas,Northern America,False,False
+180,CD,COD,República Democrática del Congo,África,África Subsahariana,Democratic Republic of the Congo,Africa,Sub-Saharan Africa,True,False
+140,CF,CAF,República Centroafricana,África,África Subsahariana,Central African Republic,Africa,Sub-Saharan Africa,True,True
+178,CG,COG,Congo,África,África Subsahariana,Congo,Africa,Sub-Saharan Africa,False,False
+756,CH,CHE,Suiza,Europa,Europa occidental,Switzerland,Europe,Western Europe,False,False
+384,CI,CIV,Côte d’Ivoire,África,África Subsahariana,Côte d’Ivoire,Africa,Sub-Saharan Africa,False,False
+152,CL,CHL,Chile,Américas,América Latina y el Caribe,Chile,Americas,Latin America and the Caribbean,False,False
+120,CM,CMR,Camerún,África,África Subsahariana,Cameroon,Africa,Sub-Saharan Africa,False,False
+156,CN,CHN,China,Asia,Asia oriental,China,Asia,Eastern Asia,False,False
+170,CO,COL,Colombia,Américas,América Latina y el Caribe,Colombia,Americas,Latin America and the Caribbean,False,False
+188,CR,CRI,Costa Rica,Américas,América Latina y el Caribe,Costa Rica,Americas,Latin America and the Caribbean,False,False
+192,CU,CUB,Cuba,Américas,América Latina y el Caribe,Cuba,Americas,Latin America and the Caribbean,False,False
+132,CV,CPV,Cabo Verde,África,África Subsahariana,Cabo Verde,Africa,Sub-Saharan Africa,False,False
+196,CY,CYP,Chipre,Asia,Asia occidental,Cyprus,Asia,Western Asia,False,False
+203,CZ,CZE,Chequia,Europa,Europa oriental,Czechia,Europe,Eastern Europe,False,False
+276,DE,DEU,Alemania,Europa,Europa occidental,Germany,Europe,Western Europe,False,False
+262,DJ,DJI,Djibouti,África,África Subsahariana,Djibouti,Africa,Sub-Saharan Africa,True,False
+208,DK,DNK,Dinamarca,Europa,Europa septentrional,Denmark,Europe,Northern Europe,False,False
+212,DM,DMA,Dominica,Américas,América Latina y el Caribe,Dominica,Americas,Latin America and the Caribbean,False,False
+214,DO,DOM,República Dominicana,Américas,América Latina y el Caribe,Dominican Republic,Americas,Latin America and the Caribbean,False,False
+12,DZ,DZA,Argelia,África,África septentrional,Algeria,Africa,Northern Africa,False,False
+218,EC,ECU,Ecuador,Américas,América Latina y el Caribe,Ecuador,Americas,Latin America and the Caribbean,False,False
+233,EE,EST,Estonia,Europa,Europa septentrional,Estonia,Europe,Northern Europe,False,False
+818,EG,EGY,Egipto,África,África septentrional,Egypt,Africa,Northern Africa,False,False
+732,EH,ESH,Sáhara Occidental,África,África septentrional,Western Sahara,Africa,Northern Africa,False,False
+232,ER,ERI,Eritrea,África,África Subsahariana,Eritrea,Africa,Sub-Saharan Africa,True,False
+724,ES,ESP,España,Europa,Europa meridional,Spain,Europe,Southern Europe,False,False
+231,ET,ETH,Etiopía,África,África Subsahariana,Ethiopia,Africa,Sub-Saharan Africa,True,True
+246,FI,FIN,Finlandia,Europa,Europa septentrional,Finland,Europe,Northern Europe,False,False
+242,FJ,FJI,Fiji,Oceanía,Melanesia,Fiji,Oceania,Melanesia,False,False
+238,FK,FLK,Islas Malvinas (Falkland),Américas,América Latina y el Caribe,Falkland Islands (Malvinas),Americas,Latin America and the Caribbean,False,False
+583,FM,FSM,Micronesia (Estados Federados de),Oceanía,Micronesia,Micronesia (Federated States of),Oceania,Micronesia,False,False
+250,FR,FRA,Francia,Europa,Europa occidental,France,Europe,Western Europe,False,False
+266,GA,GAB,Gabón,África,África Subsahariana,Gabon,Africa,Sub-Saharan Africa,False,False
+826,GB,GBR,Reino Unido de Gran Bretaña e Irlanda del Norte,Europa,Europa septentrional,United Kingdom of Great Britain and Northern Ireland,Europe,Northern Europe,False,False
+308,GD,GRD,Granada,Américas,América Latina y el Caribe,Grenada,Americas,Latin America and the Caribbean,False,False
+268,GE,GEO,Georgia,Asia,Asia occidental,Georgia,Asia,Western Asia,False,False
+254,GF,GUF,Guayana Francesa,Américas,América Latina y el Caribe,French Guiana,Americas,Latin America and the Caribbean,False,False
+288,GH,GHA,Ghana,África,África Subsahariana,Ghana,Africa,Sub-Saharan Africa,False,False
+270,GM,GMB,Gambia,África,África Subsahariana,Gambia,Africa,Sub-Saharan Africa,True,False
+324,GN,GIN,Guinea,África,África Subsahariana,Guinea,Africa,Sub-Saharan Africa,True,False
+226,GQ,GNQ,Guinea Ecuatorial,África,África Subsahariana,Equatorial Guinea,Africa,Sub-Saharan Africa,False,False
+300,GR,GRC,Grecia,Europa,Europa meridional,Greece,Europe,Southern Europe,False,False
+320,GT,GTM,Guatemala,Américas,América Latina y el Caribe,Guatemala,Americas,Latin America and the Caribbean,False,False
+624,GW,GNB,Guinea-Bissau,África,África Subsahariana,Guinea-Bissau,Africa,Sub-Saharan Africa,True,False
+328,GY,GUY,Guyana,Américas,América Latina y el Caribe,Guyana,Americas,Latin America and the Caribbean,False,False
+344,HK,HKG,"China, región administrativa especial de Hong Kong",Asia,Asia oriental,"China, Hong Kong Special Administrative Region",Asia,Eastern Asia,False,False
+340,HN,HND,Honduras,Américas,América Latina y el Caribe,Honduras,Americas,Latin America and the Caribbean,False,False
+191,HR,HRV,Croacia,Europa,Europa meridional,Croatia,Europe,Southern Europe,False,False
+332,HT,HTI,Haití,Américas,América Latina y el Caribe,Haiti,Americas,Latin America and the Caribbean,True,False
+348,HU,HUN,Hungría,Europa,Europa oriental,Hungary,Europe,Eastern Europe,False,False
+360,ID,IDN,Indonesia,Asia,Asia sudoriental,Indonesia,Asia,South-eastern Asia,False,False
+372,IE,IRL,Irlanda,Europa,Europa septentrional,Ireland,Europe,Northern Europe,False,False
+376,IL,ISR,Israel,Asia,Asia occidental,Israel,Asia,Western Asia,False,False
+356,IN,IND,India,Asia,Asia meridional,India,Asia,Southern Asia,False,False
+368,IQ,IRQ,Iraq,Asia,Asia occidental,Iraq,Asia,Western Asia,False,False
+364,IR,IRN,Irán (República Islámica del),Asia,Asia meridional,Iran (Islamic Republic of),Asia,Southern Asia,False,False
+352,IS,ISL,Islandia,Europa,Europa septentrional,Iceland,Europe,Northern Europe,False,False
+380,IT,ITA,Italia,Europa,Europa meridional,Italy,Europe,Southern Europe,False,False
+388,JM,JAM,Jamaica,Américas,América Latina y el Caribe,Jamaica,Americas,Latin America and the Caribbean,False,False
+400,JO,JOR,Jordania,Asia,Asia occidental,Jordan,Asia,Western Asia,False,False
+392,JP,JPN,Japón,Asia,Asia oriental,Japan,Asia,Eastern Asia,False,False
+404,KE,KEN,Kenya,África,África Subsahariana,Kenya,Africa,Sub-Saharan Africa,False,False
+417,KG,KGZ,Kirguistán,Asia,Asia central,Kyrgyzstan,Asia,Central Asia,False,True
+116,KH,KHM,Camboya,Asia,Asia sudoriental,Cambodia,Asia,South-eastern Asia,True,False
+296,KI,KIR,Kiribati,Oceanía,Micronesia,Kiribati,Oceania,Micronesia,True,False
+174,KM,COM,Comoras,África,África Subsahariana,Comoros,Africa,Sub-Saharan Africa,True,False
+659,KN,KNA,Saint Kitts y Nevis,Américas,América Latina y el Caribe,Saint Kitts and Nevis,Americas,Latin America and the Caribbean,False,False
+408,KP,PRK,República Popular Democrática de Corea,Asia,Asia oriental,Democratic People's Republic of Korea,Asia,Eastern Asia,False,False
+410,KR,KOR,República de Corea,Asia,Asia oriental,Republic of Korea,Asia,Eastern Asia,False,False
+414,KW,KWT,Kuwait,Asia,Asia occidental,Kuwait,Asia,Western Asia,False,False
+398,KZ,KAZ,Kazajstán,Asia,Asia central,Kazakhstan,Asia,Central Asia,False,True
+418,LA,LAO,República Democrática Popular Lao,Asia,Asia sudoriental,Lao People's Democratic Republic,Asia,South-eastern Asia,True,True
+422,LB,LBN,Líbano,Asia,Asia occidental,Lebanon,Asia,Western Asia,False,False
+662,LC,LCA,Santa Lucía,Américas,América Latina y el Caribe,Saint Lucia,Americas,Latin America and the Caribbean,False,False
+438,LI,LIE,Liechtenstein,Europa,Europa occidental,Liechtenstein,Europe,Western Europe,False,False
+144,LK,LKA,Sri Lanka,Asia,Asia meridional,Sri Lanka,Asia,Southern Asia,False,False
+430,LR,LBR,Liberia,África,África Subsahariana,Liberia,Africa,Sub-Saharan Africa,True,False
+426,LS,LSO,Lesotho,África,África Subsahariana,Lesotho,Africa,Sub-Saharan Africa,True,True
+440,LT,LTU,Lituania,Europa,Europa septentrional,Lithuania,Europe,Northern Europe,False,False
+442,LU,LUX,Luxemburgo,Europa,Europa occidental,Luxembourg,Europe,Western Europe,False,False
+428,LV,LVA,Letonia,Europa,Europa septentrional,Latvia,Europe,Northern Europe,False,False
+434,LY,LBY,Libia,África,África septentrional,Libya,Africa,Northern Africa,False,False
+504,MA,MAR,Marruecos,África,África septentrional,Morocco,Africa,Northern Africa,False,False
+492,MC,MCO,Mónaco,Europa,Europa occidental,Monaco,Europe,Western Europe,False,False
+498,MD,MDA,República de Moldova,Europa,Europa oriental,Republic of Moldova,Europe,Eastern Europe,False,True
+499,ME,MNE,Montenegro,Europa,Europa meridional,Montenegro,Europe,Southern Europe,False,False
+450,MG,MDG,Madagascar,África,África Subsahariana,Madagascar,Africa,Sub-Saharan Africa,True,False
+584,MH,MHL,Islas Marshall,Oceanía,Micronesia,Marshall Islands,Oceania,Micronesia,False,False
+807,MK,MKD,Macedonia del Norte,Europa,Europa meridional,North Macedonia,Europe,Southern Europe,False,True
+466,ML,MLI,Malí,África,África Subsahariana,Mali,Africa,Sub-Saharan Africa,True,True
+104,MM,MMR,Myanmar,Asia,Asia sudoriental,Myanmar,Asia,South-eastern Asia,True,False
+496,MN,MNG,Mongolia,Asia,Asia oriental,Mongolia,Asia,Eastern Asia,False,True
+446,MO,MAC,"China, región administrativa especial de Macao",Asia,Asia oriental,"China, Macao Special Administrative Region",Asia,Eastern Asia,False,False
+478,MR,MRT,Mauritania,África,África Subsahariana,Mauritania,Africa,Sub-Saharan Africa,True,False
+470,MT,MLT,Malta,Europa,Europa meridional,Malta,Europe,Southern Europe,False,False
+480,MU,MUS,Mauricio,África,África Subsahariana,Mauritius,Africa,Sub-Saharan Africa,False,False
+462,MV,MDV,Maldivas,Asia,Asia meridional,Maldives,Asia,Southern Asia,False,False
+454,MW,MWI,Malawi,África,África Subsahariana,Malawi,Africa,Sub-Saharan Africa,True,True
+484,MX,MEX,México,Américas,América Latina y el Caribe,Mexico,Americas,Latin America and the Caribbean,False,False
+458,MY,MYS,Malasia,Asia,Asia sudoriental,Malaysia,Asia,South-eastern Asia,False,False
+508,MZ,MOZ,Mozambique,África,África Subsahariana,Mozambique,Africa,Sub-Saharan Africa,True,False
+516,NA,NAM,Namibia,África,África Subsahariana,Namibia,Africa,Sub-Saharan Africa,False,False
+562,NE,NER,Níger,África,África Subsahariana,Niger,Africa,Sub-Saharan Africa,True,True
+566,NG,NGA,Nigeria,África,África Subsahariana,Nigeria,Africa,Sub-Saharan Africa,False,False
+558,NI,NIC,Nicaragua,Américas,América Latina y el Caribe,Nicaragua,Americas,Latin America and the Caribbean,False,False
+528,NL,NLD,Países Bajos (Reino de los),Europa,Europa occidental,Netherlands (Kingdom of the),Europe,Western Europe,False,False
+578,NO,NOR,Noruega,Europa,Europa septentrional,Norway,Europe,Northern Europe,False,False
+524,NP,NPL,Nepal,Asia,Asia meridional,Nepal,Asia,Southern Asia,True,True
+520,NR,NRU,Nauru,Oceanía,Micronesia,Nauru,Oceania,Micronesia,False,False
+554,NZ,NZL,Nueva Zelandia,Oceanía,Australia y Nueva Zelandia,New Zealand,Oceania,Australia and New Zealand,False,False
+512,OM,OMN,Omán,Asia,Asia occidental,Oman,Asia,Western Asia,False,False
+591,PA,PAN,Panamá,Américas,América Latina y el Caribe,Panama,Americas,Latin America and the Caribbean,False,False
+604,PE,PER,Perú,Américas,América Latina y el Caribe,Peru,Americas,Latin America and the Caribbean,False,False
+598,PG,PNG,Papua Nueva Guinea,Oceanía,Melanesia,Papua New Guinea,Oceania,Melanesia,False,False
+608,PH,PHL,Filipinas,Asia,Asia sudoriental,Philippines,Asia,South-eastern Asia,False,False
+586,PK,PAK,Pakistán,Asia,Asia meridional,Pakistan,Asia,Southern Asia,False,False
+616,PL,POL,Polonia,Europa,Europa oriental,Poland,Europe,Eastern Europe,False,False
+630,PR,PRI,Puerto Rico,Américas,América Latina y el Caribe,Puerto Rico,Americas,Latin America and the Caribbean,False,False
+275,PS,PSE,Estado de Palestina,Asia,Asia occidental,State of Palestine,Asia,Western Asia,False,False
+620,PT,PRT,Portugal,Europa,Europa meridional,Portugal,Europe,Southern Europe,False,False
+585,PW,PLW,Palau,Oceanía,Micronesia,Palau,Oceania,Micronesia,False,False
+600,PY,PRY,Paraguay,Américas,América Latina y el Caribe,Paraguay,Americas,Latin America and the Caribbean,False,True
+634,QA,QAT,Qatar,Asia,Asia occidental,Qatar,Asia,Western Asia,False,False
+642,RO,ROU,Rumania,Europa,Europa oriental,Romania,Europe,Eastern Europe,False,False
+688,RS,SRB,Serbia,Europa,Europa meridional,Serbia,Europe,Southern Europe,False,False
+643,RU,RUS,Federación de Rusia,Europa,Europa oriental,Russian Federation,Europe,Eastern Europe,False,False
+646,RW,RWA,Rwanda,África,África Subsahariana,Rwanda,Africa,Sub-Saharan Africa,True,True
+682,SA,SAU,Arabia Saudita,Asia,Asia occidental,Saudi Arabia,Asia,Western Asia,False,False
+90,SB,SLB,Islas Salomón,Oceanía,Melanesia,Solomon Islands,Oceania,Melanesia,True,False
+690,SC,SYC,Seychelles,África,África Subsahariana,Seychelles,Africa,Sub-Saharan Africa,False,False
+729,SD,SDN,Sudán,África,África septentrional,Sudan,Africa,Northern Africa,True,False
+752,SE,SWE,Suecia,Europa,Europa septentrional,Sweden,Europe,Northern Europe,False,False
+702,SG,SGP,Singapur,Asia,Asia sudoriental,Singapore,Asia,South-eastern Asia,False,False
+705,SI,SVN,Eslovenia,Europa,Europa meridional,Slovenia,Europe,Southern Europe,False,False
+703,SK,SVK,Eslovaquia,Europa,Europa oriental,Slovakia,Europe,Eastern Europe,False,False
+694,SL,SLE,Sierra Leona,África,África Subsahariana,Sierra Leone,Africa,Sub-Saharan Africa,True,False
+674,SM,SMR,San Marino,Europa,Europa meridional,San Marino,Europe,Southern Europe,False,False
+686,SN,SEN,Senegal,África,África Subsahariana,Senegal,Africa,Sub-Saharan Africa,True,False
+706,SO,SOM,Somalia,África,África Subsahariana,Somalia,Africa,Sub-Saharan Africa,True,False
+740,SR,SUR,Suriname,Américas,América Latina y el Caribe,Suriname,Americas,Latin America and the Caribbean,False,False
+728,SS,SSD,Sudán del Sur,África,África Subsahariana,South Sudan,Africa,Sub-Saharan Africa,True,True
+678,ST,STP,Santo Tomé y Príncipe,África,África Subsahariana,Sao Tome and Principe,Africa,Sub-Saharan Africa,False,False
+222,SV,SLV,El Salvador,Américas,América Latina y el Caribe,El Salvador,Americas,Latin America and the Caribbean,False,False
+760,SY,SYR,República Árabe Siria,Asia,Asia occidental,Syrian Arab Republic,Asia,Western Asia,False,False
+748,SZ,SWZ,Eswatini,África,África Subsahariana,Eswatini,Africa,Sub-Saharan Africa,False,True
+148,TD,TCD,Chad,África,África Subsahariana,Chad,Africa,Sub-Saharan Africa,True,True
+768,TG,TGO,Togo,África,África Subsahariana,Togo,Africa,Sub-Saharan Africa,True,False
+764,TH,THA,Tailandia,Asia,Asia sudoriental,Thailand,Asia,South-eastern Asia,False,False
+762,TJ,TJK,Tayikistán,Asia,Asia central,Tajikistan,Asia,Central Asia,False,True
+626,TL,TLS,Timor-Leste,Asia,Asia sudoriental,Timor-Leste,Asia,South-eastern Asia,True,False
+795,TM,TKM,Turkmenistán,Asia,Asia central,Turkmenistan,Asia,Central Asia,False,True
+788,TN,TUN,Túnez,África,África septentrional,Tunisia,Africa,Northern Africa,False,False
+776,TO,TON,Tonga,Oceanía,Polinesia,Tonga,Oceania,Polynesia,False,False
+792,TR,TUR,Türkiye,Asia,Asia occidental,Türkiye,Asia,Western Asia,False,False
+780,TT,TTO,Trinidad y Tabago,Américas,América Latina y el Caribe,Trinidad and Tobago,Americas,Latin America and the Caribbean,False,False
+798,TV,TUV,Tuvalu,Oceanía,Polinesia,Tuvalu,Oceania,Polynesia,True,False
+158,TW,TWN,Taiwán,Asia,Asia oriental,Taiwan,Asia,Eastern Asia,False,False
+834,TZ,TZA,República Unida de Tanzanía,África,África Subsahariana,United Republic of Tanzania,Africa,Sub-Saharan Africa,True,False
+804,UA,UKR,Ucrania,Europa,Europa oriental,Ukraine,Europe,Eastern Europe,False,False
+800,UG,UGA,Uganda,África,África Subsahariana,Uganda,Africa,Sub-Saharan Africa,True,True
+840,US,USA,Estados Unidos de América,Américas,América septentrional,United States of America,Americas,Northern America,False,False
+858,UY,URY,Uruguay,Américas,América Latina y el Caribe,Uruguay,Americas,Latin America and the Caribbean,False,False
+860,UZ,UZB,Uzbekistán,Asia,Asia central,Uzbekistan,Asia,Central Asia,False,True
+670,VC,VCT,San Vicente y las Granadinas,Américas,América Latina y el Caribe,Saint Vincent and the Grenadines,Americas,Latin America and the Caribbean,False,False
+862,VE,VEN,Venezuela (República Bolivariana de),Américas,América Latina y el Caribe,Venezuela (Bolivarian Republic of),Americas,Latin America and the Caribbean,False,False
+704,VN,VNM,Viet Nam,Asia,Asia sudoriental,Viet Nam,Asia,South-eastern Asia,False,False
+548,VU,VUT,Vanuatu,Oceanía,Melanesia,Vanuatu,Oceania,Melanesia,False,False
+882,WS,WSM,Samoa,Oceanía,Polinesia,Samoa,Oceania,Polynesia,False,False
+887,YE,YEM,Yemen,Asia,Asia occidental,Yemen,Asia,Western Asia,True,False
+710,ZA,ZAF,Sudáfrica,África,África Subsahariana,South Africa,Africa,Sub-Saharan Africa,False,False
+894,ZM,ZMB,Zambia,África,África Subsahariana,Zambia,Africa,Sub-Saharan Africa,True,True
+716,ZW,ZWE,Zimbabwe,África,África Subsahariana,Zimbabwe,Africa,Sub-Saharan Africa,False,True
+2003,ZZ,ZZZ,Otros,Región desconocida,Subregión desconocida,Others,Unknown region,Unknown subregion,False,False
