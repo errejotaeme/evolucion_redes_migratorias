@@ -959,57 +959,6 @@ def convertir_valor(valor: int, redondeo:int = 2) -> str:
 
 
 
-def graficar_desglose_ZZ_africa(tabla) -> Figure:
-
-    fig, eje = plt.subplots(figsize=(8, 8), dpi=300)
-    
-    mat_color = eje.imshow(
-        tabla,
-        aspect='auto',
-        cmap='RdPu',
-    )
-
-    eje.set_xticks(range(len(tabla.columns)))
-    eje.set_xticklabels(tabla.columns)    
-    eje.set_yticks(range(len(tabla.index)))
-    eje.set_yticklabels(tabla.index)    
-    eje.tick_params(top=True, labeltop=True, bottom=True, labelbottom=True)
-
-    
-    barra_color = fig.colorbar(
-        mat_color, ax=eje, fraction=0.1, aspect=100, pad=0.02,  
-    )
-    barra_color.set_label('Inmigrantes con origen desconocido')
-    marcas = barra_color.get_ticks()
-    ultima_marca_visible = marcas[-2]
-    
-    for i in range(len(tabla.index)):
-        for j in range(len(tabla.columns)):
-            
-            valor = tabla.iloc[i, j]
-            
-            if valor > ultima_marca_visible:
-                color_tex = 'yellow'
-            else:
-                color_tex = 'black'
-                
-            eje.text(
-                j, i, 
-                convertir_valor(valor),
-                ha='center', 
-                va='center', 
-                color=color_tex,
-                fontsize=7,
-            )
-    
-  
-    plt.tight_layout()
-    plt.savefig('resultados/desglose_ZZ_africa.png', bbox_inches='tight', dpi=300)
-    plt.close()
-    
-    return fig
-
-
 
 
     
