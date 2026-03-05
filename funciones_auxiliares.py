@@ -16,6 +16,7 @@ from pathlib import Path
 
 
 from collections import Counter
+from IPython.display import display
 from matplotlib.axes import Axes
 from matplotlib.collections import LineCollection
 from matplotlib.colors import to_rgba
@@ -346,11 +347,9 @@ def cargar_nombres_es(
 
 
 
-
-
 def graficar_distribucion_pobla_emig_inmig(
     dicc_datos_por_año: dict[int, pd.DataFrame] 
-) -> Figure:
+) -> None:
     
     # Definimos el dominio
     lados = 10
@@ -358,27 +357,13 @@ def graficar_distribucion_pobla_emig_inmig(
     vertices_dominio = [(np.cos(theta), np.sin(theta)) for theta in angulos]
     
     dpi = 300
-    fig, ejes = plt.subplots(
-        4, 
-        3, 
-        figsize=(20, 21),
-        dpi=dpi,
-        gridspec_kw={'height_ratios': [0.1, 1, 1, 1]},
-    )
-    ejes = ejes.ravel()
-    
-    indices_magnitud = [i for i in range(len(ejes)) if i % 3 == 0 and i > 1]
-    indices_años = [1, 2]
-    indices_diag = [i for i in range(len(ejes)) if i % 3 != 0 and i > 3]
-    iter_indices = iter(indices_diag)
-    
+   
     años = [1990, 2024]
     
     lista_magnitudes_objetivo = [
         ('poblacion', 'Marrón'), ('emigrantes', 'Verde'), ('inmigrantes', 'Roja')
     ]
-    
-    i = 0
+
     for magnitud_objetivo, paleta in lista_magnitudes_objetivo:
         for año in años:  
         
@@ -390,8 +375,7 @@ def graficar_distribucion_pobla_emig_inmig(
                 f'pct_aporte_{magnitud_objetivo}',
                 'lon', 
                 'lat', 
-            ]
-            
+            ]            
             # Recortamos a las columnas de interes y ordenamos
             df = df[columnas_de_interes]
             df = df.sort_values([columnas_de_interes[2]], ascending=False).reset_index(drop=True)
@@ -410,6 +394,7 @@ def graficar_distribucion_pobla_emig_inmig(
             x = (x + 180) / 180 - 1
             y = (y + 90) / 90 - 1
             coordenadas_de_sitios = np.column_stack((x, y))
+
                    
             pct_barra = 0.0
             formato_barra: str = "{desc}: [{bar}] {percentage:3.0f}% | {elapsed}"
@@ -437,65 +422,33 @@ def graficar_distribucion_pobla_emig_inmig(
                 # Título
                 'margen_titulo': 7,
                 # Nombres de celdas
-                'alfa_nombres_de_celdas': .9, 
+                'alfa_nombres_de_celdas': .8, 
                 'factor_aumento': 4,
                 # Celdas
-                'tam_min_nombre_celda': 5,
-                'grosor_borde_celdas': .6,
+                'tam_min_nombre_celda': 8,
+                'grosor_borde_celdas': 1,
                 'alfa_borde_celdas': .7,
                 'paleta_celdas': paleta,
-            }   
-    
+            }    
                     
-            diagrama._graficar_diagrama(    
-                6, # Ancho
-                6, # Alto
+            vis = diagrama._graficar_diagrama(    
+                10, # Ancho
+                10, # Alto
                 dpi, # DPI
                 '', # Título
                 '', # Nota al pie
-                150, # Núm. de caracteres por línea
-                None, # Ruta de salida
-                ejes[next(iter_indices)], # eje
+                0, # Núm. de caracteres por línea
+                f'resultados/diagrama_potencia_{magnitud_objetivo}_{año}', # Ruta de salida
+                None, # eje
                 **config_grafico,
             )
-            
-            i += 1
-    
-    for (magnitud, _), indice in zip(lista_magnitudes_objetivo, indices_magnitud):
-        if indice == 3:
-            texto = 'POBLACIÓN'
-        else:
-            texto = magnitud.upper()
-        ejes[indice].text(
-            .5,
-            .5,
-            texto,
-            ha='center',
-            fontsize=30,
-            weight='bold',
-        )
-        ejes[indice].axis('off')
-    
-    ejes[0].set_visible(False)
-    
-    for año, indice in zip(años, indices_años):
-        ejes[indice].text(
-            .5,
-            .5,
-            str(año),
-            ha='center',
-            fontsize=30,
-            weight='bold',
-        )
-        ejes[indice].axis('off')
-    
-    ruta_salida = 'resultados/distribucion_poblacion_emigracion_inmigracion_1990-2024.png'
-    plt.tight_layout(pad=4)
-    plt.savefig(ruta_salida, bbox_inches='tight', dpi=dpi)
-    plt.close()
 
-    return fig
+            display(vis)
 
+
+
+
+  
 
 
 def graficar_corredores_principales(
@@ -600,13 +553,6 @@ def graficar_red_corredores(
     excluir_otros: bool = True,
     out_path: str | None = None,
     show: bool = False,
-    df_poblaciones: pd.DataFrame | None = None,
-    # Adjusted defaults: smaller minimum node size and thinner edges
-    size_range: tuple = (200, 8000),
-    label_fontsize: int = 26,
-    legend_fontsize: int = 24,
-    edge_width_range: tuple = (0.2, 6.0),
-    save_title_file: bool = True,
 ) -> tuple:
     """
     Grafica la red global de corredores migratorios para un año dado.
@@ -687,26 +633,18 @@ def graficar_red_corredores(
     gl = ax.gridlines(draw_labels=True, linewidth=0.3, alpha=0.4, linestyle='--', color='gray')
     gl.top_labels   = False
     gl.right_labels = False
-    gl.xlabel_style = {'size': 36, 'color': '#555555'}
-    gl.ylabel_style = {'size': 36, 'color': '#555555'}
+    gl.xlabel_style = {'size': 14, 'color': '#555555'}
+    gl.ylabel_style = {'size': 14, 'color': '#555555'}
 
     # --- Aristas ---
     transform_linea = ccrs.Geodetic() if tipo_linea == 'geodesica' else ccrs.PlateCarree()
 
-    # --- Aristas: usar escala logarítmica pero acotar por percentiles para
-    # evitar que los corredores extremos dominen la estética. Además usar
-    # una función de potencia >1 para que los tramos pequeños queden más finos.
     pesos_vis = np.array([d['weight'] for _, _, d in G_vis.edges(data=True)])
-    if pesos_vis.size == 0:
-        pesos_vis = np.array([1.0])
+    log_min = np.log10(pesos_vis.min() + 1)
+    log_max = np.log10(pesos_vis.max() + 1)
 
-    # Usar percentiles para limitar outliers (p5..p95)
-    p_low, p_high = np.percentile(pesos_vis, [5.0, 95.0])
-    p_low = max(pesos_vis.min(), p_low)
-    p_high = max(p_low, p_high)
-
-    LW_MIN, LW_MAX       = edge_width_range
-    ALPHA_MIN, ALPHA_MAX = 0.03, 0.9
+    LW_MIN, LW_MAX       = 0.2, 7.0
+    ALPHA_MIN, ALPHA_MAX = 0.04, 0.65
 
     for u, v, data in G_vis.edges(data=True):
         lon_u = G_vis.nodes[u].get('lon')
@@ -716,13 +654,8 @@ def graficar_red_corredores(
         if None in (lon_u, lat_u, lon_v, lat_v):
             continue
 
-        w = float(data.get('weight', 0.0))
-        # Clamp a [p_low, p_high] para mitigar outliers
-        w_clamped = min(max(w, p_low), p_high)
-        norm = (np.log10(w_clamped + 1) - np.log10(p_low + 1)) / (np.log10(p_high + 1) - np.log10(p_low + 1)) if p_high > p_low else 0.5
-
-        # usar exponente >1 para reducir anchura de los valores pequeños
-        norm_exp = norm ** 2.0
+        norm     = (np.log10(data['weight'] + 1) - log_min) / (log_max - log_min) if log_max > log_min else 0.5
+        norm_exp = norm ** 0.4
 
         ax.plot(
             [lon_u, lon_v], [lat_u, lat_v],
@@ -738,59 +671,14 @@ def graficar_red_corredores(
     grados = dict(G_vis.degree())
     lons, lats, sizes, colores_nodo = [], [], [], []
 
-    # --- Preparar datos de población para escalado de tamaños ---
-    pop_map = {}
-    if df_poblaciones is None:
-        try:
-            df_poblaciones = pd.read_csv(Path('fuentes-de-datos') / 'poblaciones.csv', dtype=str)
-        except Exception:
-            df_poblaciones = None
-
-    if df_poblaciones is not None:
-        # normalizar nombres de columnas y tipos
-        if 'iso3_pobla' in df_poblaciones.columns and 'año_pobla' in df_poblaciones.columns and 'poblacion' in df_poblaciones.columns:
-            df_poblaciones['año_pobla'] = pd.to_numeric(df_poblaciones['año_pobla'], errors='coerce').fillna(0).astype(int)
-            df_poblaciones['poblacion'] = pd.to_numeric(df_poblaciones['poblacion'], errors='coerce').fillna(0)
-            df_year_pop = df_poblaciones[df_poblaciones['año_pobla'] == int(año)]
-            pop_map = dict(zip(df_year_pop['iso3_pobla'], df_year_pop['poblacion']))
-
-    # preparar escala logarítmica si hay datos de población
-    pop_vals = np.array(list(pop_map.values())) if pop_map else np.array([])
-    has_pop = pop_vals.size > 0
-
-    SIZE_MIN, SIZE_MAX = size_range
-
-    # Usar la estrategia del notebook de ejemplo: tamaño ~ sqrt(población) * escala
-    # Calculamos una escala tal que el mayor valor de población tenga SIZE_MAX.
-    if has_pop and pop_vals.max() > 0:
-        sqrt_vals = np.sqrt(pop_vals)
-        node_scale = SIZE_MAX / sqrt_vals.max()
-    else:
-        node_scale = 1.0
-
     for node_id, attrs in G_vis.nodes(data=True):
         if 'lon' not in attrs or 'lat' not in attrs:
             continue
         lons.append(attrs['lon'])
         lats.append(attrs['lat'])
         grado = grados.get(node_id, 0)
+        sizes.append(max(120, grado ** 1.6 * 8))
         colores_nodo.append(grado)
-
-        size = None
-        if has_pop:
-            pop = pop_map.get(node_id, 0)
-            if pop is None:
-                pop = 0
-            # raíz cuadrada como en el ejemplo
-            size = (np.sqrt(pop) * node_scale)
-            # asegurar que no sea menor al mínimo
-            size = max(size, SIZE_MIN)
-
-        if size is None or size <= 0:
-            # fallback por grado: base pequeña y crecimiento lineal moderado
-            size = max(SIZE_MIN, 8 + grado * 18)
-
-        sizes.append(size)
 
     scatter = ax.scatter(
         lons, lats,
@@ -815,72 +703,33 @@ def graficar_red_corredores(
         ax.annotate(
             attrs.get('nombre', node_id)[:22],
             (attrs['lon'], attrs['lat']),
-            xytext=(10, 10),
+            xytext=(8, 8),
             textcoords='offset points',
-            fontsize=label_fontsize,
+            fontsize=16,
             fontweight='bold',
             color='#111111',
-            bbox=dict(boxstyle='round,pad=0.4', facecolor='white', alpha=0.75, linewidth=0),
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.7, linewidth=0),
             zorder=6,
             transform=ccrs.PlateCarree(),
         )
 
     cbar = plt.colorbar(scatter, ax=ax, fraction=0.018, pad=0.02, shrink=0.55)
-    cbar.set_label('Grado (conexiones)', rotation=270, labelpad=40, fontsize=legend_fontsize)
-    cbar.ax.tick_params(labelsize=legend_fontsize)
+    cbar.set_label('Grado (conexiones)', rotation=270, labelpad=22, fontsize=16)
+    cbar.ax.tick_params(labelsize=13)
 
-    # Leyenda de tamaños (población) si hay datos: colocar abajo-izquierda
-    if has_pop:
-        pops_for_legend = [int(pop_vals.min()), int(np.median(pop_vals))]
-        labels_for_legend = [convertir_valor(p) for p in pops_for_legend]
-        sizes_for_legend = []
-        for p in pops_for_legend:
-            s = max(np.sqrt(p) * node_scale, SIZE_MIN)
-            sizes_for_legend.append(s)
-
-        # Escalar para la leyenda manteniendo proporciones
-        legend_scale = 600 / max(sizes_for_legend)
-        sizes_legend_display = [max(10, s * legend_scale) for s in sizes_for_legend]
-
-        handles = [
-            ax.scatter([], [], s=sz, c='#777777', edgecolors='#333333',
-                      linewidths=0.6, alpha=0.9, label=lab)
-            for lab, sz in zip(labels_for_legend, sizes_legend_display)
-        ]
-        legend1 = ax.legend(
-            handles=handles,
-            title=f'Población ({año})',
-            loc='lower left',
-            bbox_to_anchor=(0.01, 0.02),
-            fontsize=legend_fontsize,
-            title_fontsize=legend_fontsize,
-            framealpha=0.9,
-            labelspacing=1.5,
-            borderpad=1.5,
-        )
-        ax.add_artist(legend1)
-        
-
-    # Mover la información del título a un archivo de texto al lado de la imagen (fuera de la imagen)
-    title_text = (
+    ax.set_title(
         f'Red Global de Corredores Migratorios ({año})  —  Top {threshold_pct:.1f}% por stock absoluto\n'
         f'Umbral: {umbral:,.0f} migrantes  |  '
-        f'{G_vis.number_of_nodes()} países  |  {G_vis.number_of_edges():,} aristas'
+        f'{G_vis.number_of_nodes()} países  |  {G_vis.number_of_edges():,} aristas',
+        fontsize=22,
+        fontweight='bold',
+        color='#111111',
+        pad=18,
     )
 
-    # Guardar la figura
     plt.tight_layout()
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(out_path, dpi=dpi, bbox_inches='tight', pad_inches=0.1, facecolor=fig.get_facecolor())
-
-    # Guardar la información del título en un archivo de texto (fuera de la imagen)
-    if save_title_file:
-        try:
-            txt_path = Path(out_path).with_suffix('.txt')
-            with open(txt_path, 'w', encoding='utf-8') as fh:
-                fh.write(title_text + '\n')
-        except Exception:
-            pass
+    plt.savefig(out_path, dpi=dpi, bbox_inches='tight', facecolor='white')
     if show:
         plt.show()
     plt.close()
