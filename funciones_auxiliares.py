@@ -16,6 +16,7 @@ from pathlib import Path
 
 
 from collections import Counter
+from IPython.display import display
 from matplotlib.axes import Axes
 from matplotlib.collections import LineCollection
 from matplotlib.colors import to_rgba
@@ -346,11 +347,9 @@ def cargar_nombres_es(
 
 
 
-
-
 def graficar_distribucion_pobla_emig_inmig(
     dicc_datos_por_año: dict[int, pd.DataFrame] 
-) -> Figure:
+) -> None:
     
     # Definimos el dominio
     lados = 10
@@ -358,27 +357,13 @@ def graficar_distribucion_pobla_emig_inmig(
     vertices_dominio = [(np.cos(theta), np.sin(theta)) for theta in angulos]
     
     dpi = 300
-    fig, ejes = plt.subplots(
-        4, 
-        3, 
-        figsize=(20, 21),
-        dpi=dpi,
-        gridspec_kw={'height_ratios': [0.1, 1, 1, 1]},
-    )
-    ejes = ejes.ravel()
-    
-    indices_magnitud = [i for i in range(len(ejes)) if i % 3 == 0 and i > 1]
-    indices_años = [1, 2]
-    indices_diag = [i for i in range(len(ejes)) if i % 3 != 0 and i > 3]
-    iter_indices = iter(indices_diag)
-    
+   
     años = [1990, 2024]
     
     lista_magnitudes_objetivo = [
         ('poblacion', 'Marrón'), ('emigrantes', 'Verde'), ('inmigrantes', 'Roja')
     ]
-    
-    i = 0
+
     for magnitud_objetivo, paleta in lista_magnitudes_objetivo:
         for año in años:  
         
@@ -390,8 +375,7 @@ def graficar_distribucion_pobla_emig_inmig(
                 f'pct_aporte_{magnitud_objetivo}',
                 'lon', 
                 'lat', 
-            ]
-            
+            ]            
             # Recortamos a las columnas de interes y ordenamos
             df = df[columnas_de_interes]
             df = df.sort_values([columnas_de_interes[2]], ascending=False).reset_index(drop=True)
@@ -410,6 +394,7 @@ def graficar_distribucion_pobla_emig_inmig(
             x = (x + 180) / 180 - 1
             y = (y + 90) / 90 - 1
             coordenadas_de_sitios = np.column_stack((x, y))
+
                    
             pct_barra = 0.0
             formato_barra: str = "{desc}: [{bar}] {percentage:3.0f}% | {elapsed}"
@@ -437,65 +422,33 @@ def graficar_distribucion_pobla_emig_inmig(
                 # Título
                 'margen_titulo': 7,
                 # Nombres de celdas
-                'alfa_nombres_de_celdas': .9, 
+                'alfa_nombres_de_celdas': .8, 
                 'factor_aumento': 4,
                 # Celdas
-                'tam_min_nombre_celda': 5,
-                'grosor_borde_celdas': .6,
+                'tam_min_nombre_celda': 8,
+                'grosor_borde_celdas': 1,
                 'alfa_borde_celdas': .7,
                 'paleta_celdas': paleta,
-            }   
-    
+            }    
                     
-            diagrama._graficar_diagrama(    
-                6, # Ancho
-                6, # Alto
+            vis = diagrama._graficar_diagrama(    
+                10, # Ancho
+                10, # Alto
                 dpi, # DPI
                 '', # Título
                 '', # Nota al pie
-                150, # Núm. de caracteres por línea
-                None, # Ruta de salida
-                ejes[next(iter_indices)], # eje
+                0, # Núm. de caracteres por línea
+                f'resultados/diagrama_potencia_{magnitud_objetivo}_{año}', # Ruta de salida
+                None, # eje
                 **config_grafico,
             )
-            
-            i += 1
-    
-    for (magnitud, _), indice in zip(lista_magnitudes_objetivo, indices_magnitud):
-        if indice == 3:
-            texto = 'POBLACIÓN'
-        else:
-            texto = magnitud.upper()
-        ejes[indice].text(
-            .5,
-            .5,
-            texto,
-            ha='center',
-            fontsize=30,
-            weight='bold',
-        )
-        ejes[indice].axis('off')
-    
-    ejes[0].set_visible(False)
-    
-    for año, indice in zip(años, indices_años):
-        ejes[indice].text(
-            .5,
-            .5,
-            str(año),
-            ha='center',
-            fontsize=30,
-            weight='bold',
-        )
-        ejes[indice].axis('off')
-    
-    ruta_salida = 'resultados/distribucion_poblacion_emigracion_inmigracion_1990-2024.png'
-    plt.tight_layout(pad=4)
-    plt.savefig(ruta_salida, bbox_inches='tight', dpi=dpi)
-    plt.close()
 
-    return fig
+            display(vis)
 
+
+
+
+  
 
 
 def graficar_corredores_principales(
