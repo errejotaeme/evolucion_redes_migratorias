@@ -238,9 +238,9 @@ def graficar_comunidades_ppales(
     # Colores del grafo
     color_nodos = args.get('color_nodos', '#b1b1b1')
     colores_por_region = {
-        'Asia': '#df0016',
-        'África': '#007500',
-        'Europa': '#0000ff',
+        'Asia': '#b51b1e',
+        'África': '#197c45',
+        'Europa': '#0f00b0',
         'Américas': '#212121',
         'Oceanía': '#c67d00',        
     }
@@ -281,7 +281,7 @@ def graficar_comunidades_ppales(
     nx.draw_networkx_nodes(
         grafo_pobla_ext,
         pos_nodos,
-        node_size=1,
+        node_size=.5,
         ax=eje,
         node_color=tierra
     )
