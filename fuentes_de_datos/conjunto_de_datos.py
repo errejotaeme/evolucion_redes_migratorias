@@ -5,6 +5,7 @@ import requests
 
 from bs4 import BeautifulSoup
 from io import BytesIO, StringIO
+from itertools import product
 
 
 # # **Construcción del conjunto de datos**
@@ -196,7 +197,6 @@ except FileNotFoundError:
     df_m49.to_csv('fuentes_de_datos/m49.csv', index=False)
 
 
-
 # df auxiliar para agregrar códigos en las tablas
 df_alfa3_codigos = df_m49[['cod_m49', 'iso3_m49']]
 
@@ -217,6 +217,7 @@ try:
     check.close()
 except FileNotFoundError:
     df_coordenadas.to_csv('fuentes_de_datos/coordenadas.csv', index=False)
+
 print('Operación finalizada.')
 
 
@@ -427,9 +428,174 @@ except FileNotFoundError:
 print('Operación finalizada.')
 
 
-# 5. **UNIFICACIÓN DE LOS DATOS**
+# 5. **DATOS ECONÓMICOS**
+print('5. Procesando datos económicos...')
+
+def obtener_datos_econ( 
+    codigos_iso3: set[str],
+    url: str,
+    params: dict[str, str | int],
+    años: list[str],
+    variable: str,
+) -> pd.DataFrame:
+    respuesta = requests.get(url, params=params)
+    datos = respuesta.json()[1]
+    df = pd.json_normalize(datos)
+    df = (
+        df[(df.countryiso3code.isin(codigos_iso3) & df.date.isin(años))]
+        .rename(columns={
+            'countryiso3code': 'iso3',
+            'value': f'{variable}',
+            'date': f'año_{variable}',
+        })
+    )    
+    df = df[['iso3', f'año_{variable}', f'{variable}']]
+    df[f'año_{variable}'] = df[f'año_{variable}'].astype(int)
+    df = (
+        df.sort_values(
+            ['iso3', f'año_{variable}'], 
+            ascending=[True, True]
+        ).reset_index(drop=True)
+    )
+    return df
+
+
+# Datos grales.
+años_como_texto = [str(año) for año in años_con_datos]
+codigos_iso3.discard('ZZZ')
+params_econ = {'format': 'json', 'per_page': 20000}
+# Fuentes
+url_desempleo = 'https://api.worldbank.org/v2/country/all/indicator/SL.UEM.TOTL.ZS'
+url_pbi = 'https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.PP.CD'
+url_inflacion = 'https://api.worldbank.org/v2/country/all/indicator/FP.CPI.TOTL.ZG'
+url_gini =  'https://api.worldbank.org/v2/country/all/indicator/SI.POV.GINI'
+
+# Conjunto base al cual unimos los datos
+df_economicas = (
+    pd.DataFrame(
+        product(codigos_iso3, años_con_datos), 
+        columns=['iso3_econ', 'año']
+    ).sort_values(['iso3_econ', 'año'], ascending=[True, True])
+    .reset_index(drop=True)
+)
+
+# DESEMPLEO
+var_empleo = 'pct_desempleo'
+df_desempleo = obtener_datos_econ(
+    codigos_iso3,
+    url_desempleo,
+    params_econ,
+    años_como_texto,
+    var_empleo,
+)
+df_economicas = (
+    df_economicas.merge(
+        df_desempleo,
+        left_on=['iso3_econ', 'año'],
+        right_on=['iso3', f'año_{var_empleo}'],
+        how='left',
+    ).drop(columns=['iso3', f'año_{var_empleo}'])
+)
+
+# PBI PER CÁPITA (PPA)
+var_pbi = 'pbi_pc_ppa'
+df_pbi = obtener_datos_econ(
+    codigos_iso3,
+    url_pbi,
+    params_econ,
+    años_como_texto,
+    var_pbi,
+)
+df_economicas = (
+    df_economicas.merge(
+        df_pbi,
+        left_on=['iso3_econ', 'año'],
+        right_on=['iso3', f'año_{var_pbi}'],
+        how='left',
+    ).drop(columns=['iso3', f'año_{var_pbi}'])
+)
+
+# INFLACIÓN
+var_infla = 'inflacion'
+df_infla = obtener_datos_econ(
+    codigos_iso3,
+    url_inflacion,
+    params_econ,
+    años_como_texto,
+    var_infla,
+)
+df_economicas = (
+    df_economicas.merge(
+        df_infla,
+        left_on=['iso3_econ', 'año'],
+        right_on=['iso3', f'año_{var_infla}'],
+        how='left',
+    ).drop(columns=['iso3', f'año_{var_infla}'])
+)
+
+# GINI
+var_gini= 'gini'
+df_gini = obtener_datos_econ(
+    codigos_iso3,
+    url_gini,
+    params_econ,
+    años_como_texto,
+    var_gini,
+)
+df_economicas = (
+    df_economicas.merge(
+        df_gini,
+        left_on=['iso3_econ', 'año'],
+        right_on=['iso3', f'año_{var_gini}'],
+        how='left',
+    ).drop(columns=['iso3', f'año_{var_gini}'])
+)
+
+# ÍNDICE DE DESARROLLO HUMANO
+cols_hdi = [f'hdi_{año}' for año in años_como_texto][:-1] # Llega hasta 2023 (traigo hasta 2020)
+columnas = ['iso3'] + cols_hdi # Para recortar
+columnas_numericas = ['iso3'] + años_con_datos[:-1] # Para convertir a tabla larga 
+
+url_hdi = 'https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Composite_indices_complete_time_series.csv'
+headers = {'User-Agent': 'Mozilla/5.0'}
+respuesta = requests.get(url_hdi, headers=headers)
+respuesta.raise_for_status()
+df_hdi = pd.read_csv(StringIO(respuesta.text))
+
+df_hdi = df_hdi[columnas]
+df_hdi.columns = columnas_numericas
+df_hdi = df_hdi[df_hdi.iso3.isin(codigos_iso3)]
+df_hdi = (
+    df_hdi.melt(
+        id_vars=['iso3'],
+        value_vars=años_con_datos[:-1],
+        var_name='año_hdi',
+        value_name='hdi',
+    )
+)
+df_hdi = df_hdi.sort_values(['iso3', 'año_hdi'], ascending=[True, True]).reset_index(drop=True)
+
+df_economicas = (
+    df_economicas.merge(
+        df_hdi,
+        left_on=['iso3_econ', 'año'],
+        right_on=['iso3', 'año_hdi'],
+        how='left',
+    ).drop(columns=['iso3', 'año_hdi'])
+)
+
+# Exportamos las tablas
+try:
+    check =open('fuentes_de_datos/economicas.csv', 'r')
+    check.close()
+except FileNotFoundError:
+    df_economicas.to_csv('fuentes_de_datos/economicas.csv', index=False)
+print('Operación finalizada.')    
+
+
+# 6. **UNIFICACIÓN DE LOS DATOS**
 # Juntamos los datos obtenidos de las distintas fuentes
-print('5. Integrando los datos...')
+print('6. Integrando los datos...')
 
 # Unimos migraciones con los datos de los códigos, regiones, subregiones, etc.
 df_migras_90_24 = (
@@ -572,7 +738,6 @@ try:
 except FileNotFoundError:
     df_migras_90_24.to_csv('fuentes_de_datos/migras_90_24.csv', index=False)
 
-
 print('Operación finalizada.')
 tex_m49 = '\n• df_m49: códigos y clasificaciones de países, e indicadores estructurales.'
 tex_pobla = '\n• df_poblaciones: población por país en los años con datos migratorios.'
@@ -580,8 +745,8 @@ tex_coord = '\n• df_coordenadas: centroides geográficos de cada país.'
 tex_migras_orig = '\n• df_migras_original: datos migratorios en bruto.'
 tex_migras = '\n• df_migraciones: datos migratorios de 202 países.'
 tex_migras_90_24 = '\n• df_migras_90_24: reúne los datos anteriores.'
+tex_econ = '\n• df_economicas: desempleo, inflación, PBI, GINI, HDI.'
 dfs_disponibles = (
-    tex_m49 + tex_pobla + tex_coord + tex_migras_orig + tex_migras + tex_migras_90_24
+    tex_m49 + tex_pobla + tex_coord + tex_migras_orig + tex_migras + tex_migras_90_24 + tex_econ
 )
-print(f'\nDatos disponibles\n{dfs_disponibles}')
-
+print(f'\nDatos disponibles\n{'-'*len('Datos disponibles')}{dfs_disponibles}')
