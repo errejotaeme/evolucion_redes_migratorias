@@ -226,22 +226,27 @@ def graficar_concentracion_emigracion(
 def graficar_comunidades_ppales(
     grafo_pobla_ext: nx.DiGraph,
     eje: Axes,
-    año: str,
+    año: int,
     **args,
 ) -> None:
     
     # Colores del mapa
-    agua = args.get('agua','#fafafa')
-    tierra = args.get('tierra', '#b1b1b1')
+    agua = args.get('agua','#ececec')
+    tierra = args.get('tierra', '#cfcfcf')
     fronteras = args.get('fronteras', '#f3f3f3')
-    continentes = args.get('continentes', '#90877f')   
+    continentes = args.get('continentes', '#a6a6a6')   
     # Colores del grafo
     color_nodos = args.get('color_nodos', '#b1b1b1')
-    color_etq_pais = args.get('color_etq_pais', '#003cff')
+    colores_por_region = {
+        'Asia': '#df0016',
+        'África': '#007500',
+        'Europa': '#0000ff',
+        'Américas': '#212121',
+        'Oceanía': '#c67d00',        
+    }
     
     # Vsualización 
     eje.set_facecolor(agua) 
-    # eje.axis('off')
 
     # Hacemos zoom en la región de interés
     posiciones_ingresadas = nx.get_node_attributes(grafo_pobla_ext, 'pos')
@@ -263,8 +268,8 @@ def graficar_comunidades_ppales(
     # Elementos del mapa
     eje.add_feature(cfeature.LAND, facecolor=tierra)
     eje.add_feature(cfeature.OCEAN, facecolor=agua)
-    eje.add_feature(cfeature.COASTLINE, edgecolor=continentes, linewidth=0.8)
-    eje.add_feature(cfeature.BORDERS, edgecolor=fronteras, linewidth=0.6)
+    eje.add_feature(cfeature.COASTLINE, edgecolor=continentes, linewidth=0.8, zorder=1)
+    eje.add_feature(cfeature.BORDERS, edgecolor=fronteras, linewidth=0.6, zorder=1)
 
     # Diccionario donde se guardan las coordenadas con referencia al mapa
     pos_nodos = {}
@@ -283,42 +288,61 @@ def graficar_comunidades_ppales(
     
     # # ETIQUETAS
     etiquetas = nx.get_node_attributes(grafo_pobla_ext, 'etiqueta')
+    region = nx.get_node_attributes(grafo_pobla_ext, 'region_inmig')
     for nodo, (x, y) in pos_nodos.items():
         eje.text(
             x,
             y,
             etiquetas[nodo],
-            fontsize=9.5,
+            fontsize=11,
             fontweight='bold',
             fontstyle='italic',
-            color=color_etq_pais,
+            color=colores_por_region.get(region[nodo], 'none'),
             ha='center',
             va='center',
-            # linespacing=interlineado,
-            alpha=.6
+            alpha=.7
+        )
+    
+    for comu, pais in grafo_pobla_ext.edges():
+        nx.draw_networkx_edges(
+            grafo_pobla_ext,
+            pos_nodos,
+            edgelist=[(comu, pais)],
+            width=.5,
+            edge_color=[colores_por_region.get(region[pais], 'none')],
+            alpha=.6,
+            connectionstyle='arc3,rad=0.2',            
+            arrowstyle='->',
+            arrows=True,
+            ax=eje,
         )
         
     # Colores y texto de las referencias
-    tex_ref = f'Origen de la principal comunidad de inmigrantes en {año}.'
+    if año == 2024:
+        del colores_por_region['Oceanía']
+        lista_ref = []
+        for region, color in colores_por_region.items():
+            tex_ref = f'Comunidad inmigrante con origen en {region}.'
+            ref = mpatches.Patch(color=color, label=tex_ref)
+            lista_ref.append(ref)
     
-    ref_pais = mpatches.Patch(color=color_etq_pais, label=tex_ref)
-    
-    ref1 = eje.legend(
-        # title='REFERENCIAS',
-        handles=[ref_pais],
-        loc='lower left',
-        fontsize=12,
-        frameon=False,
-        facecolor='black',
-        framealpha=0.2,
-        edgecolor='black',
-    )
-    # Color del texto de los ítems
-    for text in ref1.get_texts():
-        text.set_color('black')
-    # Color del título
-    ref1.get_title().set_color('white')
-    eje.add_artist(ref1)
+        ref1 = eje.legend(
+            # title='REFERENCIAS',
+            handles=lista_ref,
+            loc='lower left',
+            fontsize=14,
+            frameon=False,
+            facecolor='black',
+            framealpha=0.2,
+            edgecolor='black',
+        )
+        # Color del texto de los ítems
+        for text in ref1.get_texts():
+            text.set_color('black')
+        # Color del título
+        ref1.get_title().set_color('white')
+        eje.add_artist(ref1)
+
 
 
 
