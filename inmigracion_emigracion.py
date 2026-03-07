@@ -12,7 +12,9 @@ def graficar_top20(diccionario):
 
     for iso3, valores in diccionario.items():
 
-        total_2024 = abs(valores["inmigracion_2024"] + valores["emigracion_2024"]-valores["inmigracion_1990"] - valores["emigracion_1990"])
+        #total_2024 = abs(valores["inmigracion_2024"] + valores["emigracion_2024"]-valores["inmigracion_1990"] - valores["emigracion_1990"])
+        total_2024 = abs(valores["inmigracion_2024"] + valores["emigracion_2024"])
+
 
         datos_lista.append({
             "iso3": iso3,
@@ -49,21 +51,53 @@ def graficar_top20(diccionario):
     # 3) Crear figura
     # ===============================
 
+    # fig, ax = plt.subplots(figsize=(14, 12))
+
+    # # Barras 2024 (arriba)
+    # ax.barh(y + altura/2, inm_2024, height=altura, color="#4C84C4", label="Inmigración 2024")
+    # ax.barh(y + altura/2, emi_2024, height=altura, color="#F47C4C", left=inm_2024, label="Emigración 2024")
+
+    # # Barras 1990 (abajo)
+    # ax.barh(y - altura/2, inm_1990, height=altura, color="#4C84C4", alpha=0.5, label="Inmigración 1990")
+    # ax.barh(y - altura/2, emi_1990, height=altura, color="#F47C4C", alpha=0.5, left=inm_1990, label="Emigración 1990")
+
+    # ax.set_yticks(y)
+    # ax.set_yticklabels(nombres)
+
+    # ax.set_xlabel("Número de personas")
+    # #ax.set_title("Inmigración y Emigración — Top 20 países (1990 y 2024)", fontsize=16)
+
+    # ax.legend(loc="lower right")
+
+    # ax.invert_yaxis()
+
+    # plt.tight_layout()
+
+    # plt.savefig("resultados/top20_inmigracion_emigracion_alt.png", dpi=300, bbox_inches="tight")
+    # print("Gráfico de barras guardado como: resultados/top20_inmigracion_emigracion.png")
+    # plt.show()
+
     fig, ax = plt.subplots(figsize=(14, 12))
 
-    # Barras 2024 (arriba)
-    ax.barh(y + altura/2, inm_2024, height=altura, color="#4C84C4", label="Inmigración 2024")
-    ax.barh(y + altura/2, emi_2024, height=altura, color="#F47C4C", left=inm_2024, label="Emigración 2024")
+    # Emigración negativa (izquierda)
+    emi_2024_neg = [-x for x in emi_2024]
+    emi_1990_neg = [-x for x in emi_1990]
 
-    # Barras 1990 (abajo)
+    # 2024
+    ax.barh(y + altura/2, inm_2024, height=altura, color="#4C84C4", label="Inmigración 2024")
+    ax.barh(y + altura/2, emi_2024_neg, height=altura, color="#F47C4C", label="Emigración 2024")
+
+    # 1990
     ax.barh(y - altura/2, inm_1990, height=altura, color="#4C84C4", alpha=0.5, label="Inmigración 1990")
-    ax.barh(y - altura/2, emi_1990, height=altura, color="#F47C4C", alpha=0.5, left=inm_1990, label="Emigración 1990")
+    ax.barh(y - altura/2, emi_1990_neg, height=altura, color="#F47C4C", alpha=0.5, label="Emigración 1990")
+
+    # línea central
+    ax.axvline(0, color="black", linewidth=1)
 
     ax.set_yticks(y)
     ax.set_yticklabels(nombres)
 
     ax.set_xlabel("Número de personas")
-    #ax.set_title("Inmigración y Emigración — Top 20 países (1990 y 2024)", fontsize=16)
 
     ax.legend(loc="lower right")
 
@@ -72,11 +106,12 @@ def graficar_top20(diccionario):
     plt.tight_layout()
 
     plt.savefig("resultados/top20_inmigracion_emigracion_alt.png", dpi=300, bbox_inches="tight")
-    print("Gráfico de barras guardado como: resultados/top20_inmigracion_emigracion.png")
+    print("Gráfico guardado como: resultados/top20_inmigracion_emigracion_alt2.png")
+
     plt.show()
 
 
-df = pd.read_csv("fuentes-de-datos/migras_90_24.csv")
+df = pd.read_csv("fuentes_de_datos/migras_90_24.csv")
 año = 2024
 
 # ===============================
