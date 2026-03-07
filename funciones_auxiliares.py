@@ -356,7 +356,7 @@ def cargar_nombres_es(
     Si se elige cod_m49, las claves se convierten a int.
     """
     if path is None:
-        p = Path(__file__).resolve().parent / 'fuentes-de-datos' / 'nombres_es.csv'
+        p = Path(__file__).resolve().parent / 'fuentes_de_datos' / 'nombres_es.csv'
     else:
         p = Path(path)
     
