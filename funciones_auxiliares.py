@@ -1057,3 +1057,144 @@ def graficar_bloques_africa(
     return fig
     
     
+
+
+
+
+
+def migracion_argentina(
+    red: nx.DiGraph,
+    max_migrantes: int,
+    pais_max_migrantes: str,
+    min_migrantes: int,
+    año: int, 
+    **args
+) -> Figure | Axes:
+   
+    # Configuración de la visualización    
+    # Tamaño del gráfico
+    tam_figura = (20,10)  
+    # Márgenes que permiten regular el zoom sobre el mapa
+    margen_lon = 7
+    margen_lat = 20
+    # Colores del mapa
+    agua = args.get('agua','#e6e6e6')
+    tierra = args.get('tierra', '#b0b0b0')
+    fronteras = args.get('fronteras', '#dfdfdf')
+    continentes = args.get('continentes', '#8a8a8a')   
+    # Colores del grafo
+    color_titulo = '#ffffff'
+    color_nodos = '#2cffb2'
+    color_emigracion = '#ff2f32'
+    color_inmigracion = '#2600ff'
+    color_etq_pais = '#101010'
+    alfa_nodos = .5
+    alfa_aristas = .7
+    alfa_etiquetas = .7 
+    # Tamaños de fuentes
+    tam_tex_etq = 15 # nodos
+    tam_tex_ref = 13 # referencias
+        
+    fig, eje = plt.subplots(
+        figsize=tam_figura, 
+        dpi=300,
+        subplot_kw={'projection': ccrs.Robinson()}
+    )
+
+    fig.set_facecolor('white')
+    eje.set_facecolor(agua) 
+    # eje.axis('off') 
+        
+    # Elementos del mapa
+    eje.add_feature(cfeature.LAND, facecolor=tierra)
+    eje.add_feature(cfeature.OCEAN, facecolor=agua)
+    eje.add_feature(cfeature.COASTLINE, edgecolor=continentes, linewidth=0.7, zorder=1)
+    eje.add_feature(cfeature.BORDERS, edgecolor=fronteras, linewidth=0.6, zorder=1)   
+    
+    # Coordenadas
+    pos_nodos = nx.get_node_attributes(red, 'pos')
+    pos_proj = {}
+    for n, (lon, lat) in pos_nodos.items():
+        x, y = ccrs.Robinson().transform_point(lon, lat, ccrs.PlateCarree())
+        pos_proj[n] = (x, y)
+    
+    # NODOS
+    pesos_nodos = nx.get_node_attributes(red, 'poblacion')
+    tamaños = [(pesos_nodos[n]*2e4) for n in red.nodes()]    
+    nx.draw_networkx_nodes(
+        red,
+        pos_proj,
+        node_size=tamaños,
+        node_color=color_nodos,
+        edgecolors='none',
+        alpha=alfa_nodos,
+        ax=eje,
+    )
+    
+    # ETIQUETAS
+    for nodo in red.nodes():
+        nx.draw_networkx_labels(
+            red,
+            pos_proj,
+            labels={nodo: nodo},
+            font_color=color_etq_pais,
+            font_weight='bold',
+            alpha=alfa_etiquetas,
+            font_size=tam_tex_etq,
+            ax=eje,
+        )    
+            
+    # ARISTAS
+    pesos_aristas = [float(red[u][v]['weight'])*2e1 for u,v in red.edges()]       
+    for i, (orig, des) in enumerate(red.edges()):
+        if orig == 'AR':
+            color_aris = color_emigracion
+        else:
+            color_aris = color_inmigracion
+        nx.draw_networkx_edges(
+            red,
+            pos_proj,
+            edgelist=[(orig, des)],
+            width=pesos_aristas[i],
+            edge_color=color_aris,
+            alpha=alfa_aristas,
+            connectionstyle='arc3,rad=0.3',            
+            arrowstyle='-',
+            arrows=True,
+            ax=eje,
+        )    
+        
+    # REFERENCIAS
+    ref_nodo = mpatches.Patch(color=to_rgba(color_nodos, alpha=alfa_nodos), label='Población')
+    ref_emig = mpatches.Patch(color=to_rgba(color_emigracion, alpha=alfa_aristas), label='Emigrantes')
+    ref_inmig = mpatches.Patch(color=to_rgba(color_inmigracion, alpha=alfa_aristas), label='Inmigrantes')
+    ref_min_mig = mpatches.Patch(
+        color=to_rgba(color_inmigracion, alpha=0), 
+        label=f'Mín. migrantes: {min_migrantes}'
+    )        
+    ref_max_mig = mpatches.Patch(
+        color=to_rgba(color_inmigracion, alpha=0), 
+        label=f'Máx. migrantes: {max_migrantes} ({pais_max_migrantes})'
+    )
+
+    lista_ref = [ref_nodo, ref_emig, ref_inmig, ref_min_mig, ref_max_mig]
+    ref = eje.legend(
+        handles=lista_ref,
+        handlelength=2,
+        handleheight=.7,
+        loc='lower left',
+        fontsize=tam_tex_ref,
+        frameon=True,
+        facecolor='none',
+        framealpha=.9,
+        edgecolor='none',
+    )
+    # Color del texto de los ítems
+    for text in ref.get_texts():
+        text.set_color(color_etq_pais)
+    eje.add_artist(ref)
+        
+    fig.tight_layout()
+    plt.savefig(f'resultados/red_migra_argentina_{año}.png', bbox_inches='tight', dpi=300) 
+    plt.close()
+    return fig
