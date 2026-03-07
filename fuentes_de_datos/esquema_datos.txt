@@ -1,0 +1,79 @@
+@startuml
+
+object df_m49 {
+  cod_m49 : int64
+  iso2_m49 : object
+  iso3_m49 : object
+  pais_ES : object
+  region_ES : object
+  subregion_ES : object
+  pais_EN : object
+  region_EN : object
+  subregion_EN : object
+  menos_desarrollado : bool
+  sin_litoral : bool
+}
+
+object df_poblaciones {
+  cod_pobla : int64 
+  iso3_pobla : object
+  año_pobla : int64
+  poblacion : int64
+}
+
+object df_coordenadas {
+  cod_coord : int64 
+  iso3_coord : object
+  estatus_geo : object
+  lon : float64
+  lat : float64
+}
+
+object df_migraciones {
+  cod_orig : int64
+  iso3_orig : object
+  origen_ES : object
+  origen_EN : object
+  cod_des : int64
+  iso3_des : object
+  destino_ES : object
+  destino_EN : object
+  año : int64
+  migrantes : int64
+}
+
+object df_migras_90_24 {
+  cod_orig : int64
+  iso2_orig : object
+  iso3_orig : object
+  origen_ES : object
+  origen_EN : object
+  region_orig_ES : object
+  region_orig_EN : object
+  subregion_orig_ES : object
+  subregion_orig_EN : object
+  poblacion_orig : int64
+  menos_desarr_orig : bool
+  sin_litoral_orig : bool
+  lon_orig : float64
+  lat_orig : float64
+  cod_des : int64
+  iso2_des : object
+  iso3_des : object
+  destino_ES : object
+  destino_EN : object
+  region_des_ES : object
+  region_des_EN : object
+  subregion_des_ES : object
+  subregion_des_EN : object
+  poblacion_des : int64
+  menos_desarr_des : bool
+  sin_litoral_des : bool
+  lon_des : float64
+  lat_des : float64
+  año : int64
+  migrantes :int64 
+}
+
+
+@enduml

@@ -54,6 +54,7 @@ class DiagramaDePotencia:
     _sitios: np.ndarray # Las coordenadas de los sitios proyectadas al dominio. Dimensiones: (|sitios|, 2)
     _nombres_celdas: np.ndarray # Las etiquetas que identifican cada celda    
     _capacidades: np.ndarray # La magnitud o capacidad asociada a cada celda
+    _magnitudes: np.ndarray
     _pesos: np.ndarray # Los pesos a aprender que definen el tamaño final de las celdas  
     _sitios_proyectados: np.ndarray # Dimensiones: (|sitios|, 3)
     _ids_caras_inferiores: tuple[list[int], ...] # Los índices de sitios que forman un triángulo en la envolvente de los sitios proyectados
@@ -106,6 +107,7 @@ class DiagramaDePotencia:
         # Magnitudes objetivos
         if self._validar_magnitudes(magnitudes_objetivo):
             self._capacidades = self._calcular_capacidades(np.array(magnitudes_objetivo))
+            self._magnitudes = np.array(magnitudes_objetivo)
         else:
             raise ValueError(
                 'type(magnitud) -> int, float; |magnitudes_objetivo| = |sitios|; magnitud_i > 0.'
@@ -846,6 +848,7 @@ class DiagramaDePotencia:
         factor_margen_perim = args.get('factor_margen_perim', 1.1)
         
         # Nombres de celdas
+        self._actualizar_nombres_de_celdas() # Agrego magnitud en las celdas cuando hay espacio disponible
         color_nombres_de_celdas = args.get('color_nombres_de_celdas', '#312a2a')
         alfa_nombres_de_celdas = args.get('alfa_nombres_de_celdas', 1)
         tam_min_nombre_celda = args.get('tam_min_nombre_celda', 12) # Tamaño de texto para todas iguales (ccuando factor_aumento = 0)
@@ -957,3 +960,48 @@ class DiagramaDePotencia:
             return fig
         else:
             return None
+
+
+
+        
+    # Función para convertir valores
+    def _convertir_valor(self, valor: int) -> str:
+        redondeo = 0
+        if valor < 1e3:
+            return f'{valor}'
+        elif valor < 1e6:
+            prefijo = 'k'
+            denominador = 1e3
+        elif valor < 1e9:
+            prefijo = 'M'
+            denominador = 1e6
+            redondeo = 1
+        else:
+            prefijo= 'MM'
+            denominador = 1e9
+            redondeo = 2
+        conversion = valor / denominador
+        valor_redondeado = round(conversion, redondeo)
+        # si el decimal es 0 lo descarto
+        if valor_redondeado.is_integer():
+            return f'{int(valor_redondeado)}{prefijo}'
+        else:
+            return f'{valor_redondeado}{prefijo}'
+
+
+    def _actualizar_nombres_de_celdas(self) -> None:
+        umbral = np.percentile(self._magnitudes, 25)   
+        nuevos_nombres = []
+        for nombre, magnitud in zip(self._nombres_celdas, self._magnitudes):
+            if magnitud >= umbral:
+                nuevos_nombres.append(f'{nombre}\n{self._convertir_valor(magnitud)}')
+            else:
+                nuevos_nombres.append(nombre)
+        self._nombres_celdas = np.array(nuevos_nombres)
+                
+                
+
+
+
+            
+        
